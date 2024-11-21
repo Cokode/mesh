@@ -45,7 +45,7 @@ const LoginField = ({onSubmit}) => {
           errorMessage= {errMessage.default}
           onChangeText={(e) => {
             setErrMessage({...errMessage, default: errMessage['']});
-            setLogin({...login, email: e})
+            setLogin({...login, password: e})
           }}
           labelStyle={styles.labelStyle}
           keyboardAppearance="dark"
