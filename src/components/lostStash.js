@@ -27,8 +27,8 @@ const LostStash = (props) => {
         activeOpacity={0.6}
         underlayColor ='red'
       >
-         <View style={styles.picture}>
-          <Image style={styles.pictureImage} source={require('../../assets/myIMGs/image2.png' )}/>
+        <View style={styles.picture}>
+        <Image style={styles.pictureImage} source={require('../../assets/myIMGs/image2.png' )}/>
         </View>
         <View style={styles.view}>
         <Text style={{fontSize: 16, fontWeight: 500}}>{ownerNames}</Text>
@@ -39,7 +39,6 @@ const LostStash = (props) => {
         <View style={styles.viewImage}>
           <Image style={styles.image} source={require('../../assets/myIMGs/image.png' )}/>
         </View>
-
       </TouchableOpacity>
     </View>
   )

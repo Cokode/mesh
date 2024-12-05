@@ -1,10 +1,16 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import { Input, Button, color } from "@rneui/base";
 import Spacer from "./spacer";
 import { View, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginField = ({onSubmit}) => {
+  const navigation = useNavigation();
 
+    const inputElement = useRef();
+    const focusInput = () => {
+      inputElement.current.focus();
+    }
   const [login, setLogin] = useState({
     email: "",
     password: ""
@@ -20,6 +26,7 @@ const LoginField = ({onSubmit}) => {
     <View style={styles.container}>
       <Spacer>
       <Input 
+        ref={inputElement}
         style={styles.inputStyle}
           label="Email"
           inputMode="email"
@@ -30,9 +37,7 @@ const LoginField = ({onSubmit}) => {
           }}
           labelStyle={styles.labelStyle}
           keyboardAppearance="dark"
-          // errorMessage= {errMessage.default}
           errorStyle={{color: 'orange', fontSize: 14}}
-          shake={true}
       />
       </Spacer>
       <Spacer>
@@ -60,6 +65,7 @@ const LoginField = ({onSubmit}) => {
         onPress={()=> {
           setErrMessage({...errMessage, default: errMessage['email']});
           onSubmit(login)
+          navigation.navigate('MainScreens')
         }}
         disabled={login['password'] && login['email']? false: true}
         disabledStyle={{backgroundColor: '#A6AEBF'}} 

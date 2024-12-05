@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Input, Text } from "@rneui/base";
-import { View, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
 import ModalSelector from 'react-native-modal-selector';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-const RegisterInput = (props) => {
+const ReportComp = (props) => {
   const { bottomPad } = props;
 
   const [value, setValue] = useState({
@@ -29,16 +29,15 @@ const RegisterInput = (props) => {
     { key: index++, label: 'Others', value: 'Others' },
   ];
 
-  return <>
-    <View style={styles.imageContainer}>
-      <Image style={styles.image} source={require('../../assets/myIMGs/image.png')} />
-      <Text style={styles.imageText}>{'Your name'}</Text>
-    </View>
-
+  return (
+    <ScrollView 
+      // stickyHeaderIndices={[0]}
+      bounces={true}
+    >
     <View style={styles.inputGroup}>
       <Text style={styles.label}>images</Text>
       <View style={styles.imageContainer}>
-      {/* <Image style={styles.image} source={require('../../assets/myIMGs/image.png')} /> */}
+
       <AntDesign name="picture" size={54} color="grey" paddingTop={15} />
       </View>
 
@@ -94,17 +93,6 @@ const RegisterInput = (props) => {
         onChangeText={(e) => setValue({ ...value, stashName: e })}
       />
     </View>
-
-    {/* {(value.category === 'Pet') &&  
-      <View style={styles.inputGroup}>
-        <Text style={[{ color: value.tagNumber ? 'defaultColor' : 'red' }, styles.label]}>Tag number</Text>
-        <Input
-          errorMessage={''}
-          value={value.sp_number}
-          onChangeText={(e) => setValue({ ...value, tagNumber: e })}
-        />
-      </View>
-    } */}
     
     { (value.category !== 'Others' && value.category !== 'Pet') &&  
       <View style={styles.inputGroup}>
@@ -132,15 +120,16 @@ const RegisterInput = (props) => {
     </View>
 
     <TouchableOpacity style={styles.buttonGroup} activeOpacity={.6} onPress={() => alert('Registered!')}>
-      <Text style={styles.buttonText}>Register stash</Text>
+      <Text style={styles.buttonText}>Submit</Text>
     </TouchableOpacity>
-  </>
+    </ScrollView>
+  )
 };
 
 const styles = StyleSheet.create({
   View: {
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#f9f9f9',//'#fff',
     borderRadius: 5
   },
   label: {
@@ -149,10 +138,12 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 15,
+    marginHorizontal: 10,
     borderWidth: 1,
     borderColor: '#B3C8CF',
     padding: 5,
-    borderRadius: 10
+    borderRadius: 10,
+    backgroundColor: '#f9f9f9'
   },
   imageContainer: {
     flexDirection: 'row',
@@ -184,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterInput;
+export default ReportComp;

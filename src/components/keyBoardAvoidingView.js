@@ -6,14 +6,15 @@ const KeyboardAvoiding = ({children}) => {
   behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
   keyboardVerticalOffset={10}
   style={ styles.container }
-    >{children}</KeyboardAvoidingView>
+    >
+      {children}
+    </KeyboardAvoidingView>
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1B6B93',
-    // padding: 5,
   }
 });
 

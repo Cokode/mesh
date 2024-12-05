@@ -4,19 +4,12 @@ import { Input, Button } from "@rneui/themed";
 import KeyboardAvoiding from "../components/keyBoardAvoidingView";
 import RegisterInput from "../components/registerInput";
 
-
-
-
-
 const RegisterStashSrn = () => {
   const [padding, setPadding] = useState(0);
 
   const bottomPadding = height => {
     setPadding(height);
   }
-
-
-
 
   return (
     <KeyboardAvoiding

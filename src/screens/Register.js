@@ -1,5 +1,6 @@
 import React from "react";
-import {StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import {StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Text } from "react-native";
 import Spacer from "../components/spacer.js";
 import InputText from "../components/signupField.js";
 import axios from "axios";
@@ -7,6 +8,8 @@ import { ApiUrl } from "../urls/Api";
 
 
 const SignupScreen = () => {
+  const navigator = useNavigation();
+
   const handleSubmit = async (formData) => {
     try {
       console.log(formData);
@@ -31,6 +34,7 @@ const SignupScreen = () => {
         <Spacer>
           <InputText handleSubmit={handleSubmit}/>
         </Spacer>
+        <Text onPress={()=> navigator.goBack()}>Login instead</Text>
       </SafeAreaView>
     </KeyboardAvoidingView>
   )
