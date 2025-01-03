@@ -27,7 +27,6 @@ const RegisterInput = ({ bottomPad, showModal }) => {
 
   const imageUpdater = async () => {
     const maxImages = 6;
-    
     const remainingUploads = maxImages - imageUrl.length;
 
     if (remainingUploads <= 0) {
