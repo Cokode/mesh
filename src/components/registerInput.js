@@ -1,161 +1,186 @@
 import React, { useState } from "react";
-import { Button, Input, Text } from "@rneui/base";
-import { View, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
-import ModalSelector from 'react-native-modal-selector';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { 
+  View, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  FlatList, 
+  Text 
+} from "react-native";
+import { Input } from "@rneui/base";
+import ModalSelector from "react-native-modal-selector";
+import { renderItem, ListEmptyComponent } from "./imageUpload";
+import selectImage from "./lib/imagePicker";
 
-const RegisterInput = (props) => {
-  const { bottomPad } = props;
-
+const RegisterInput = ({ bottomPad, showModal }) => {
   const [value, setValue] = useState({
     hasPicture: false,
-    category: '',
-    other: '',   // 'other' is part of the state object
-    stashName: '',
-    desc: '',
-    sp_number: '',
-    tagNumber: ''
+    category: "",
+    other: "",
+    stashName: "",
+    desc: "",
+    sp_number: "",
+    tagNumber: "",
   });
+  
+  const [imageUrl, setImageUrl] = useState([{ imgUrl: "uploader" }]);
 
-  let index = 0;
+  const imageUpdater = async () => {
+    const maxImages = 6;
+    
+    const remainingUploads = maxImages - imageUrl.length;
+
+    if (remainingUploads <= 0) {
+      return;
+    }
+
+    const results = await selectImage(remainingUploads);
+    if (!results || results.canceled) return;
+
+    const newImages = results.assets.map((img) => ({ imgUrl: img.uri }));
+    setImageUrl([...imageUrl, ...newImages]);
+  };
 
   const categories = [
-    { key: index++, section: true, label: "All Categories" },
-    { key: index++, label: 'Vehicles', value: 'Vehicle' },
-    { key: index++, label: 'Electronics', value: 'Electronic' },
-    { key: index++, label: 'Pets', value: 'Pet' },
-    { key: index++, label: 'Accessories', value: 'Accessory' },
-    { key: index++, label: 'Clothings', value: 'Clothing' },
-    { key: index++, label: 'Others', value: 'Others' },
+    { key: 0, section: true, label: "All Categories" },
+    { key: 1, label: "Vehicles", value: "Vehicle" },
+    { key: 2, label: "Electronics", value: "Electronic" },
+    { key: 3, label: "Pets", value: "Pet" },
+    { key: 4, label: "Accessories", value: "Accessory" },
+    { key: 5, label: "Clothings", value: "Clothing" },
+    { key: 6, label: "Others", value: "Others" },
   ];
 
-  return <>
-    <View style={styles.imageContainer}>
-      <Image style={styles.image} source={require('../../assets/myIMGs/image.png')} />
-      <Text style={styles.imageText}>{'Your name'}</Text>
-    </View>
-
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>images</Text>
+  return (
+    <View>
+      {/* Profile Picture */}
       <View style={styles.imageContainer}>
-      {/* <Image style={styles.image} source={require('../../assets/myIMGs/image.png')} /> */}
-      <AntDesign name="picture" size={54} color="grey" paddingTop={15} />
+        {/* <Image 
+          style={styles.image} 
+          source={require("../../assets/myIMGs/image.png")} 
+        /> */}
+        <Text style={styles.imageText}>Your name</Text>
       </View>
 
-    </View>
-
-    <ModalSelector
-      data={categories}
-      initValue={'Me'}
-      style={styles.inputGroup}
-      // onLayout={50}
-      cancelText='Cancel'
-      selectStyle={styles.modal} // Todo 
-      supportedOrientations={['landscape', 'portrait']}
-      cancelButtonAccessibilityLabel={'Cancel Button'}
-      onChange={(e) => setValue({ ...value, category: e.value })} 
-    >
-      <Text style={styles.label}>Category</Text>
-      <Input
-        style={styles.View}
-        editable={false}
-        placeholder={'Select category'}
-        value={value.category}
+      {/* Image Upload Section */}
+      <FlatList
+        style={styles.ListGroup}
+        horizontal
+        data={imageUrl}
+        renderItem={({ item }) => renderItem({ item, imageUpdater })}
+        ListEmptyComponent={ListEmptyComponent}
+        showsHorizontalScrollIndicator={false}
       />
-    </ModalSelector>
 
-    {value.category === 'Others' &&  
-      <View style={styles.inputGroup}>
-        <Text style={[{ color: value.other ? 'defaultColor' : 'red' }, styles.label]}>Specify</Text>
+      {/* Category Selector */}
+      <ModalSelector
+        data={categories}
+        initValue="Select category"
+        style={styles.inputGroup}
+        cancelText="Cancel"
+        selectStyle={styles.modal}
+        supportedOrientations={["landscape", "portrait"]}
+        cancelButtonAccessibilityLabel="Cancel Button"
+        onChange={(option) => setValue({ ...value, category: option.value })}
+      >
+        <Text style={styles.label}>Category</Text>
         <Input
-          errorMessage={''}
+          style={styles.View}
+          editable={false}
+          placeholder="Select category"
+          value={value.category}
+        />
+      </ModalSelector>
+
+      {/* Conditional Inputs */}
+      {value.category === "Others" && (
+        <InputSection
+          label="Specify"
           value={value.other}
-          onChangeText={(e) => setValue({ ...value, other: e })}
+          onChangeText={(text) => setValue({ ...value, other: text })}
         />
-      </View>
-    }
+      )}
 
-    {value.category === 'Pet' &&  
-      <View style={styles.inputGroup}>
-        <Text style={[{ color: value.tagNumber ? 'defaultColor' : 'red' }, styles.label]}>Tag number</Text>
-        <Input
-          errorMessage={''}
+      {value.category === "Pet" && (
+        <InputSection
+          label="Tag Number"
           value={value.tagNumber}
-          onChangeText={(e) => setValue({ ...value, tagNumber: e })}
+          onChangeText={(text) => setValue({ ...value, tagNumber: text })}
         />
-      </View>
-    }
+      )}
 
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Stash name</Text>
-      <Input
-        errorMessage={''}
+      {value.category !== "Others" && value.category !== "Pet" && (
+        <InputSection
+          label="Serial / Product Number"
+          value={value.sp_number}
+          onChangeText={(text) => setValue({ ...value, sp_number: text })}
+        />
+      )}
+
+      {/* Common Inputs */}
+      <InputSection
+        label="Stash Name"
         value={value.stashName}
-        onChangeText={(e) => setValue({ ...value, stashName: e })}
+        onChangeText={(text) => setValue({ ...value, stashName: text })}
       />
-    </View>
-
-    {/* {(value.category === 'Pet') &&  
-      <View style={styles.inputGroup}>
-        <Text style={[{ color: value.tagNumber ? 'defaultColor' : 'red' }, styles.label]}>Tag number</Text>
-        <Input
-          errorMessage={''}
-          value={value.sp_number}
-          onChangeText={(e) => setValue({ ...value, tagNumber: e })}
-        />
-      </View>
-    } */}
-    
-    { (value.category !== 'Others' && value.category !== 'Pet') &&  
-      <View style={styles.inputGroup}>
-        <Text style={[{ color: value.sp_number ? 'defaultColor' : value.category ? 'red': 'defaultColor' }, styles.label]}>Serial / Product number</Text>
-        <Input
-          errorMessage={''}
-          value={value.sp_number}
-          onChangeText={(e) => setValue({ ...value, sp_number: e })}
-        />
-      </View>
-    }
-
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Description</Text>
-      <Input
-        errorMessage={''}
-        value={value.desc}  
-        onChangeText={(e) => setValue({ ...value, desc: e })} 
-        onFocus={() => bottomPad(50)}
+      <InputSection
+        label="Description"
+        value={value.desc}
+        onChangeText={(text) => setValue({ ...value, desc: text })}
         multiline
         maxLength={300}
-        scrollEnabled
-        onBlur={() => bottomPad(0)} 
+        onFocus={() => bottomPad(50)}
+        onBlur={() => bottomPad(0)}
       />
-    </View>
 
-    <TouchableOpacity style={styles.buttonGroup} activeOpacity={.6} onPress={() => alert('Registered!')}>
-      <Text style={styles.buttonText}>Register stash</Text>
-    </TouchableOpacity>
-  </>
+      {/* Register Button */}
+      <TouchableOpacity
+        style={styles.buttonGroup}
+        activeOpacity={0.6}
+        onPress={showModal}
+      >
+        <Text style={styles.buttonText}>Register Stash</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
+
+const InputSection = ({ label, value, onChangeText, ...props }) => (
+  <View style={styles.inputGroup}>
+    <Text style={styles.label}>{label}</Text>
+    <Input
+      errorMessage=""
+      value={value}
+      onChangeText={onChangeText}
+      {...props}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   View: {
     padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 5
+    backgroundColor: "#fff",
+    borderRadius: 5,
   },
   label: {
     padding: 10,
-    fontSize: 12
+    fontSize: 12,
   },
   inputGroup: {
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: '#B3C8CF',
-    padding: 5,
-    borderRadius: 10
+    borderColor: "#B3C8CF",
+    marginHorizontal: 10,
+    borderRadius: 10,
+  },
+  ListGroup: {
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "#B3C8CF",
   },
   imageContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   imageText: {
     fontSize: 14,
@@ -165,22 +190,21 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50,
-    padding: 10,
-    borderRadius: 20
+    borderRadius: 20,
   },
   buttonGroup: {
-    backgroundColor: '#1B6B93',
+    backgroundColor: "#1B6B93",
     borderRadius: 10,
     padding: 20,
-    width: '80%',
-    alignSelf: 'center',
-    marginBottom: 15
+    width: "80%",
+    alignSelf: "center",
+    marginBottom: 15,
   },
   buttonText: {
     fontSize: 14,
-    alignSelf: 'center',
-    color: '#fff',
-    fontWeight: 'bold'
+    alignSelf: "center",
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
