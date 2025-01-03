@@ -1,34 +1,26 @@
 import React from "react";
-import { Text, StyleSheet, View, Button } from "react-native";
+import { Text, StyleSheet, ScrollView } from "react-native";
 import Spacer from "../components/spacer";
 import { useNavigation } from "@react-navigation/native";
-
+import StashView from "../components/stashView";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const StashScreen = () => {
   const navigation = useNavigation();
+
   return (
-    <View style={styles.container} >
-      <Spacer>
-      <Button title="Go to Log in screen"
-        onPress={()=> navigation.navigate('LoginScreen')} 
-      />
-      </Spacer>
-      <Spacer>
-        <Text style={{
-          fontSize: 60
-        }}>
-          Hello I am StashScreen
-        </Text>
-      </Spacer>
-    </View>
-  )
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        <StashView />
+      </ScrollView>
+      </GestureHandlerRootView>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9'
-  }
+    // padding: 20, // Optional: Add padding if needed
+  },
 });
 
 export default StashScreen;

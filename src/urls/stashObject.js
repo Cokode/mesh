@@ -11,6 +11,7 @@ const stashProp = {
   lastKLoc: "",
   imageAddress: "",
 }
+
 let date = new Date(Date.now()).toLocaleDateString();
 let time = new Date(Date.now()).toLocaleTimeString()
 const newItem = {

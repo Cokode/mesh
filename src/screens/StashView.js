@@ -65,7 +65,6 @@ const StashView = ({route}) => {
               <TouchableOpacity 
                 style={styles.buttonGroup}
                 activeOpacity={.6}
-                
                 >
                 <Text style={styles.buttonText}> Start Recovery</Text>
               </TouchableOpacity>

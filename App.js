@@ -11,9 +11,11 @@ import RegisterStashSrn from './src/screens/RegisterStashSrn.js';
 import StashScreen from './src/screens/StashScreen.js';
 import BoardScreen from './src/screens/BoardScreen.js';
 import Stashview from './src/screens/StashView.js';
+import QRCodeGenerator from './src/components/qrCode.js';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 

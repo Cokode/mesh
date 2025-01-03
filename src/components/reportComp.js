@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button, Input, Text } from "@rneui/base";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
 import ModalSelector from 'react-native-modal-selector';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 const ReportComp = (props) => {
   const { bottomPad } = props;
@@ -38,21 +39,21 @@ const ReportComp = (props) => {
       <Text style={styles.label}>images</Text>
       <View style={styles.imageContainer}>
 
-      <AntDesign name="picture" size={54} color="grey" paddingTop={15} />
+      {/* <FontAwesome6 name="plus" size={54} color="grey"  paddingTop={15} /> */}
+      <Fontisto name="plus-a" size={54} color="grey"  paddingTop={15} />
       </View>
-
     </View>
 
     <ModalSelector
       data={categories}
       initValue={'Me'}
       style={styles.inputGroup}
-      // onLayout={50}
       cancelText='Cancel'
       selectStyle={styles.modal} // Todo 
       supportedOrientations={['landscape', 'portrait']}
       cancelButtonAccessibilityLabel={'Cancel Button'}
       onChange={(e) => setValue({ ...value, category: e.value })} 
+      animationType="slide"
     >
       <Text style={styles.label}>Category</Text>
       <Input
@@ -60,6 +61,7 @@ const ReportComp = (props) => {
         editable={false}
         placeholder={'Select category'}
         value={value.category}
+        
       />
     </ModalSelector>
 
@@ -70,6 +72,7 @@ const ReportComp = (props) => {
           errorMessage={''}
           value={value.other}
           onChangeText={(e) => setValue({ ...value, other: e })}
+          style={styles.inputStyle}
         />
       </View>
     }
@@ -81,6 +84,7 @@ const ReportComp = (props) => {
           errorMessage={''}
           value={value.tagNumber}
           onChangeText={(e) => setValue({ ...value, tagNumber: e })}
+          style={styles.inputStyle}
         />
       </View>
     }
@@ -91,6 +95,8 @@ const ReportComp = (props) => {
         errorMessage={''}
         value={value.stashName}
         onChangeText={(e) => setValue({ ...value, stashName: e })}
+        style={styles.inputStyle}
+        // onFocus={}
       />
     </View>
     
@@ -101,6 +107,7 @@ const ReportComp = (props) => {
           errorMessage={''}
           value={value.sp_number}
           onChangeText={(e) => setValue({ ...value, sp_number: e })}
+          style={styles.inputStyle}
         />
       </View>
     }
@@ -115,11 +122,17 @@ const ReportComp = (props) => {
         multiline
         maxLength={300}
         scrollEnabled
-        onBlur={() => bottomPad(0)} 
+        onBlur={() => bottomPad(0)}
+        style={styles.inputStyle}
       />
     </View>
 
-    <TouchableOpacity style={styles.buttonGroup} activeOpacity={.6} onPress={() => alert('Registered!')}>
+    <TouchableOpacity style={styles.buttonGroup} activeOpacity={.6} onPress={() => {
+      
+      console.log(value)
+      alert('Registered!')}
+      
+      }>
       <Text style={styles.buttonText}>Submit</Text>
     </TouchableOpacity>
     </ScrollView>
@@ -143,10 +156,20 @@ const styles = StyleSheet.create({
     borderColor: '#B3C8CF',
     padding: 5,
     borderRadius: 10,
-    backgroundColor: '#f9f9f9'
+    backgroundColor: '#f9f9f9',
+  },
+  inputStyle: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    padding: 5,
+    marginBottom: 5,
+    borderColor: '#6B736B',
+    borderWidth: .4
   },
   imageContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    // backgroundColor: 'orange'
   },
   imageText: {
     fontSize: 14,
