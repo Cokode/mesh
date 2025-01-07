@@ -4,10 +4,10 @@ import Spacer from "./spacer";
 import { View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const LoginField = ({onSubmit}) => {
-  const navigation = useNavigation();
+const LoginField = ({ onSubmit }) => {
 
     const inputElement = useRef();
+
     const focusInput = () => {
       inputElement.current.focus();
     }
@@ -63,9 +63,8 @@ const LoginField = ({onSubmit}) => {
         buttonStyle={styles.buttonStyle} // For the button itself
         titleStyle={styles.titleStyle}  // For the text inside the button
         onPress={()=> {
-          setErrMessage({...errMessage, default: errMessage['email']});
+          setErrMessage({...errMessage, default: errMessage['email']}); // ONLY set if login failed
           onSubmit(login)
-          navigation.navigate('MainScreens')
         }}
         disabled={login['password'] && login['email']? false: true}
         disabledStyle={{backgroundColor: '#A6AEBF'}} 

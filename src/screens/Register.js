@@ -3,8 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import {StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Text } from "react-native";
 import Spacer from "../components/spacer.js";
 import InputText from "../components/signupField.js";
-import axios from "axios";
-import { ApiUrl } from "../urls/Api";
+import { ApiUrl, api } from "../urls/Api";
 
 
 const SignupScreen = () => {
@@ -12,19 +11,19 @@ const SignupScreen = () => {
 
   const handleSubmit = async (formData) => {
     try {
-      console.log(formData);
-      const response = await axios.post(ApiUrl["register"], formData, {
+      const response = await api.post(ApiUrl.register, formData, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzNhNGE1OTlkMzJlNGRhNjNhNTkxMWIiLCJlbWFpbCI6InN0ZXZlbkB5YWhvby5jb20iLCJpYXQiOjE3MzE4NzM0ODEsImV4cCI6MTczMjQ3ODI4MX0.4FYsxKcsvBDJncejVKRFXEAGODQuGTfL0tNUaPKTco0"
-        }
+        },
+        withCredentials: true, // Include this if credentials are involved
       });
-      console.log("Server Response:", response.data);
+
+      console.log("Server Response: ", response);
     } catch (error) {
       console.error("Error submitting form:", error.response?.data || error.message);
     }
   };
-
+  
   return (
     <KeyboardAvoidingView
       behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }

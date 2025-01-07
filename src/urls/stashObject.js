@@ -14,21 +14,34 @@ const stashProp = {
 
 let date = new Date(Date.now()).toLocaleDateString();
 let time = new Date(Date.now()).toLocaleTimeString()
+
+ const categories = [
+    { key: 0, section: true, label: "All Categories" },
+    { key: 1, label: "Vehicles", value: "Vehicle" },
+    { key: 2, label: "Electronics", value: "Electronic" },
+    { key: 3, label: "Pets", value: "Pet" },
+    { key: 4, label: "Accessories", value: "Accessory" },
+    { key: 5, label: "Clothings", value: "Clothing" },
+    { key: 6, label: "Others", value: "Others" },
+  ];
+
 const newItem = {
   userID: '',
-  itemID: '',
-  itemName: '',
-  itemDesc: '',
-  barCodeNum: '',
-  s_p_Number: '',
-  category: 'Select options',
-  lost: false,
-  reporterID: '',
+  itemID: '', 
   rewardEligibility: false,
-  imageurl: '',
-  priorityStatus: 'High-priority',
   dateAdded: date,
-  timeAdded: time
+  itemName: '', 
+  sp_Number: '', //
+  ifOthers: "",
+  itemDesc: '', //
+  barcodeNumber: '',// 
+  category: 'Select options',
+  pictures: null ,//
+  LostStatus: false,
+  FoundStatus: null,
+  timeAdded: time,
+  priorityStatus: '',
+  tagNumber: ""
 }
 
 const items = [
@@ -229,4 +242,22 @@ const items = [
   },
 ];
 
-export {stashProp, items, newItem};
+
+let myStash =
+  {
+	"assetId": "", 
+ 	"base64": "", 
+ 	"duration": "",
+ 	"exif": "", 
+	 "fileName": "",
+ 	"fileSize": "",
+ 	"height": "",
+ 	"mimeType": "image/png",
+ 	"pairedVideoAsset": "", 
+	"type": "", 
+	"width": "",
+	"uri": "uploader",
+  }
+
+
+export {stashProp, items, newItem, myStash, categories};

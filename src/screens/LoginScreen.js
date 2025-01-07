@@ -2,30 +2,30 @@ import React, { useState } from "react";
 import { StatusBar, SafeAreaView, StyleSheet, Text, Platform, View, TouchableOpacity, ScrollView } from "react-native";
 import KeyboardAvoiding from "../components/keyBoardAvoidingView";
 import LoginField from "../components/loginField";
-import { ApiUrl } from "../urls/Api";
-import axios from "axios";
 import Spacer from "../components/spacer";
 import { useNavigation } from "@react-navigation/native";
+import { ApiUrl, api } from "../urls/Api";
 
-const LoginScreen = (props) => {
+const LoginScreen = () => {
   const navigation = useNavigation();
 
   const loginRequest = async (loginData) => {
     try {
-      const response = await axios.post(ApiUrl['login'], loginData, {
+      const response = await api.post(ApiUrl.login, loginData, {
         headers: {
           "Content-Type": "application/json",
-        }
+        },
+        withCredentials: true,
       });
 
       if (response.status) {
-        return (<View> <Text>Hello </Text> </View>)
+        console.log(response.data)
+       navigation.navigate('MainScreens')
       } else {
       }
     
-      console.log(response.data);
     } catch (error) {
-      console.log({error: error.message});
+      console.log({error: error});
     }
   }
 

@@ -6,7 +6,7 @@ const selectImage = async (allowed) => {
   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
   if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
+     // alert("Permission to access camera roll is required!");
       return;
   }
   
@@ -21,13 +21,13 @@ const selectImage = async (allowed) => {
       allowsMultipleSelection: true
   });
 
+  //console.log("Select Image." + result.assets[0].assetId);
   if (result.canceled) {
       console.log('result canceled');
       return;
   }
 
   return result;
-
 };
 
 

@@ -4,6 +4,7 @@ import { Input, Button } from "@rneui/themed";
 import KeyboardAvoiding from "../components/keyBoardAvoidingView";
 import RegisterInput from "../components/registerInput";
 import QRCodeGenerator from "../components/qrCode";
+import ImageLoading from "../views/imgLoading";
 
 const RegisterStashSrn = () => {
   const [padding, setPadding] = useState(0);
@@ -19,7 +20,6 @@ const RegisterStashSrn = () => {
 
   const dataToStore = "https://www.instagram.com/lordofnordic/"; // Replace with your data
 
-
   return (
     <KeyboardAvoiding
     >
@@ -30,11 +30,20 @@ const RegisterStashSrn = () => {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={show}
-          onRequestClose={() => setShow(!show)}  
+          visible={false}
+          // onRequestClose={() => setShow(!show)}  
         >
           <QRCodeGenerator url= {dataToStore} closeModal={hideModal}/>
         </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={show}
+          // onRequestClose={() => setShow(!show)}  
+        >
+          <ImageLoading display={hideModal} />
+      </Modal>
         <StatusBar 
           barStyle={'default'}
           showHideTransition={'slide'}

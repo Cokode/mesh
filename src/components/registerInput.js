@@ -5,59 +5,72 @@ import {
   Image, 
   TouchableOpacity, 
   FlatList, 
-  Text 
+  Text ,
 } from "react-native";
 import { Input } from "@rneui/base";
 import ModalSelector from "react-native-modal-selector";
-import { renderItem, ListEmptyComponent } from "./imageUpload";
+import { renderItem, ListEmptyComponent}  from "./imageUpload";
 import selectImage from "./lib/imagePicker";
+import { myStash, newItem, categories } from "../urls/stashObject";
+let base64Data = "";
 
-const RegisterInput = ({ bottomPad, showModal }) => {
-  const [value, setValue] = useState({
-    hasPicture: false,
-    category: "",
-    other: "",
-    stashName: "",
-    desc: "",
-    sp_number: "",
-    tagNumber: "",
-  });
-  
-  const [imageUrl, setImageUrl] = useState([{ imgUrl: "uploader" }]);
+const RegisterInput = ({ bottomPad, submitAction }) => {
+ 
+  const [ form, setForm ] = useState (newItem);
+  const [ imageData, setImageData ] = useState([]);
+   // const [ lockSubmit, setLockSubmit ] = useState(true); OMITTING FOR NOW
 
   const imageUpdater = async () => {
+    const isEmptySet = imageData.length <= 0;
     const maxImages = 6;
-    const remainingUploads = maxImages - imageUrl.length;
-
+    const remainingUploads = maxImages - imageData.length;
+  
     if (remainingUploads <= 0) {
       return;
     }
 
     const results = await selectImage(remainingUploads);
     if (!results || results.canceled) return;
+  
+    let newImages = results.assets.map(asset => ({ ...asset}));
+    base64Data = newImages[0].base64;
 
-    const newImages = results.assets.map((img) => ({ imgUrl: img.uri }));
-    setImageUrl([...imageUrl, ...newImages]);
+    if (isEmptySet) {
+      newImages.push(myStash);
+    } else {
+      imageData.forEach(e => newImages.push(e));
+    }
+
+    setImageData(newImages);
+    console.log("ending line..........");
   };
 
-  const categories = [
-    { key: 0, section: true, label: "All Categories" },
-    { key: 1, label: "Vehicles", value: "Vehicle" },
-    { key: 2, label: "Electronics", value: "Electronic" },
-    { key: 3, label: "Pets", value: "Pet" },
-    { key: 4, label: "Accessories", value: "Accessory" },
-    { key: 5, label: "Clothings", value: "Clothing" },
-    { key: 6, label: "Others", value: "Others" },
-  ];
+  const handleDelete = (item) => {
+    const result = (prev) => prev.filter((i) => i.uri !== item.uri)
+    setImageData(result);
+  };
+
+  const handleSubmit = () => {
+
+    // const nonEmptyValues = [form.sp_Number, form.stashName]; // Array of strings to check
+    // let  allEmpty = nonEmptyValues.every(str => str === "");
+
+     if (imageData.length > 1) {
+      console.log("main coding begings here");
+      console.log(form)
+    }
+
+    return;
+  }
 
   return (
     <View>
       {/* Profile Picture */}
       <View style={styles.imageContainer}>
-        {/* <Image 
-          style={styles.image} 
-          source={require("../../assets/myIMGs/image.png")} 
-        /> */}
+        {
+          <Image  style={styles.image} 
+            source={{ uri: `data:image/png;base64,${base64Data}`}} /> 
+        }
         <Text style={styles.imageText}>Your name</Text>
       </View>
 
@@ -65,9 +78,10 @@ const RegisterInput = ({ bottomPad, showModal }) => {
       <FlatList
         style={styles.ListGroup}
         horizontal
-        data={imageUrl}
-        renderItem={({ item }) => renderItem({ item, imageUpdater })}
-        ListEmptyComponent={ListEmptyComponent}
+        data={imageData}
+        keyExtractor={item => item.uri}
+        renderItem={({ item }) => renderItem({ item, imageUpdater, onDelete: handleDelete })}
+        ListEmptyComponent={<ListEmptyComponent imageUpdater={imageUpdater} />}
         showsHorizontalScrollIndicator={false}
       />
 
@@ -80,52 +94,52 @@ const RegisterInput = ({ bottomPad, showModal }) => {
         selectStyle={styles.modal}
         supportedOrientations={["landscape", "portrait"]}
         cancelButtonAccessibilityLabel="Cancel Button"
-        onChange={(option) => setValue({ ...value, category: option.value })}
+        onChange={(option) => setForm({ ...form, category: option.value })}
       >
         <Text style={styles.label}>Category</Text>
         <Input
           style={styles.View}
           editable={false}
           placeholder="Select category"
-          value={value.category}
+          value={form.category}
         />
       </ModalSelector>
 
       {/* Conditional Inputs */}
-      {value.category === "Others" && (
+      {form.category === "Others" && (
         <InputSection
           label="Specify"
-          value={value.other}
-          onChangeText={(text) => setValue({ ...value, other: text })}
+          value={form.other}
+          onChangeText={(text) => setForm({ ...form, ifOthers: text })}
         />
       )}
 
-      {value.category === "Pet" && (
+      {form.category === "Pet" && (
         <InputSection
           label="Tag Number"
-          value={value.tagNumber}
-          onChangeText={(text) => setValue({ ...value, tagNumber: text })}
+          value={form.tagNumber}
+          onChangeText={(text) => setForm({ ...form, tagNumber: text })}
         />
       )}
 
-      {value.category !== "Others" && value.category !== "Pet" && (
+      {form.category !== "Others" && form.category !== "Pet" && (
         <InputSection
           label="Serial / Product Number"
-          value={value.sp_number}
-          onChangeText={(text) => setValue({ ...value, sp_number: text })}
+          value={form.sp_Number}
+          onChangeText={(text) => setForm({ ...form, sp_Number: text })}
         />
       )}
 
       {/* Common Inputs */}
       <InputSection
         label="Stash Name"
-        value={value.stashName}
-        onChangeText={(text) => setValue({ ...value, stashName: text })}
+        value={form.itemName}
+        onChangeText={(text) => setForm({ ...form, itemName: text })}
       />
       <InputSection
         label="Description"
-        value={value.desc}
-        onChangeText={(text) => setValue({ ...value, desc: text })}
+        value={form.desc}
+        onChangeText={(text) => setForm({ ...form, desc: text })}
         multiline
         maxLength={300}
         onFocus={() => bottomPad(50)}
@@ -136,13 +150,16 @@ const RegisterInput = ({ bottomPad, showModal }) => {
       <TouchableOpacity
         style={styles.buttonGroup}
         activeOpacity={0.6}
-        onPress={showModal}
+        onPress={handleSubmit}
+        disabled={false}
       >
         <Text style={styles.buttonText}>Register Stash</Text>
       </TouchableOpacity>
     </View>
   );
+
 };
+
 
 const InputSection = ({ label, value, onChangeText, ...props }) => (
   <View style={styles.inputGroup}>

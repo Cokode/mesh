@@ -1,11 +1,19 @@
+import axios from "axios";
+
 
 const ApiUrl = {
-  register: 'http://localhost:3000/register',
-  login: 'http://localhost:3000/login',
-  updateProfile: 'http://localhost:update-profile',
-  registerItem: 'http://localhost:3000/api/addstash'
+  register: "register",
+  login: "login",
+  updateProfile: "update-profile",
+  registerItem: "api/addstash",
+  SRNcheck: "api/serialNumberCheck",
 }
 
-console.log(ApiUrl["register"]);
+const api = axios.create({
+  baseURL: "http://192.168.0.101:3000/", // Replace with your server's IP
+});
 
-export {ApiUrl};
+console.log(ApiUrl['SRNcheck']);
+console.log(ApiUrl.registerItem);
+
+export {ApiUrl, api};
