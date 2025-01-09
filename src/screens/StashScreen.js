@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, StyleSheet, ScrollView } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import Spacer from "../components/spacer";
 import { useNavigation } from "@react-navigation/native";
 import StashView from "../components/stashView";
@@ -10,9 +10,7 @@ const StashScreen = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
         <StashView />
-      </ScrollView>
       </GestureHandlerRootView>
   );
 };

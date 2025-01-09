@@ -1,24 +1,30 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from "react-native";
 
-const StashTemplate = ({value, onpress, payLoad}) => {
-  const { stashName, timePosted, SerialNum, date, desc} = value;
+const StashTemplate = ({ value, onpress }) => {
+  const { itemName, timeAdded, sp_Number, dateAdded, itemDesc, pictures } = value;
+  const base64 = pictures.length > 0 ? pictures[0].base64 : '';
 
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={.8} onPress={onpress}>
+    <TouchableOpacity style={styles.container} activeOpacity={0.8} onPress={onpress}>
       <View style={styles.descView}>
-        <Text style={{fontSize: 15, fontWeight: "600"}}>{ stashName }</Text>
-        <Text>{ SerialNum }</Text>
-        <Text>{ date +" "+ timePosted }</Text>
-        <Text style={{color: 'grey'}}>{ desc }</Text>
+        <Text style={{ fontSize: 15, fontWeight: '600' }}>{itemName}</Text>
+        <Text>{sp_Number}</Text>
+        <Text>{dateAdded + ' ' + timeAdded}</Text>
+        <Text style={{ color: 'grey' }}>{itemDesc}</Text>
       </View>
 
       <View style={styles.imageView}>
-        <Image style={styles.image} source={require("../../assets/myIMGs/image.png")} />
+        {base64 ? (
+          <Image style={styles.image} source={{ uri: `data:image/png;base64,${base64}` }} />
+        ) : (
+          <Text>No Image</Text>
+        )}
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
+
 
 const styles = StyleSheet.create({
   container: {

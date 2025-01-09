@@ -17,17 +17,15 @@ let time = new Date(Date.now()).toLocaleTimeString()
 
  const categories = [
     { key: 0, section: true, label: "All Categories" },
-    { key: 1, label: "Vehicles", value: "Vehicle" },
-    { key: 2, label: "Electronics", value: "Electronic" },
-    { key: 3, label: "Pets", value: "Pet" },
-    { key: 4, label: "Accessories", value: "Accessory" },
+    { key: 1, label: "Vehicles", value: "Vehicles" },
+    { key: 2, label: "Electronics", value: "Electronics" },
+    { key: 3, label: "Pets", value: "Pets" },
+    { key: 4, label: "Accessories", value: "Accessories" },
     { key: 5, label: "Clothings", value: "Clothing" },
     { key: 6, label: "Others", value: "Others" },
   ];
 
 const newItem = {
-  userID: '',
-  itemID: '', 
   rewardEligibility: false,
   dateAdded: date,
   itemName: '', 
@@ -36,12 +34,12 @@ const newItem = {
   itemDesc: '', //
   barcodeNumber: '',// 
   category: 'Select options',
-  pictures: null ,//
   LostStatus: false,
   FoundStatus: null,
   timeAdded: time,
   priorityStatus: '',
-  tagNumber: ""
+  tagNumber: "",
+  pictures: [] ,//
 }
 
 const items = [
@@ -256,8 +254,10 @@ let myStash =
  	"pairedVideoAsset": "", 
 	"type": "", 
 	"width": "",
-	"uri": "uploader",
+	"uri": "uploader", 
+  "canceled": "false"
   }
+
 
 
 export {stashProp, items, newItem, myStash, categories};

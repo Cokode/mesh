@@ -1,25 +1,24 @@
 import React, {useState} from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const ReportChoice = (props) => {
-  const {type} = props;
+  const { type } = props;
   const [choice, setChoice] = useState(true);
 
-  return(
-    <View>
-      <TouchableOpacity
-        style={ styles.pressView }
-        onPress={() => {
-          setChoice(type) }}
-        activeOpacity={ 0.4 }
+  const SetType = () => {
+    const action = type();
+    setChoice(action);
+  }
+
+  return (
+    <>
+      <TouchableOpacity style={ styles.pressView } onPress={ SetType } activeOpacity={ 0.4 }
       >
-        <Text
-          style={ styles.text }
-        >
+        <Text style={ styles.text } >
           { choice ? 'Report Registered Item ?' : 'Report Found Item ?' }
         </Text>
       </TouchableOpacity>
-    </View>
+    </>
   )
 }
 

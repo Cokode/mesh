@@ -1,166 +1,90 @@
 import React, { useState } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  Modal,
-  TouchableOpacity,
-  Button,
-  Switch,
-} from "react-native";
+import { Text, StyleSheet, View, Pressable, FlatList, Image } from "react-native";
+import Spacer from "./spacer";
 
-const LostView = (props) => {
-  const { stashName, SerialNum, desc } = props;
-  const [showModal, setShowModal] = useState(false);
-  const [isRewardEligible, setIsRewardEligible] = useState(false);
-  const [priorityStatus, setPriorityStatus] = useState(false);
+const LostView = ({ item }) => {
+  const { itemName, sp_Number, dateAdded, timeAdded, pictures, itemDesc } = item;
+  const [expandList, setExpandList] = useState(true);
 
-  const toggleRewardEligibility = () => {
-    setIsRewardEligible(!isRewardEligible);
-  };
-
-  const togglePriorityStatus = () => {
-    setPriorityStatus(!priorityStatus);
-  };
-
-  const handleSubmit = () => {
-    // Handle the submit logic here if needed
-    setShowModal(false);
-  };
+  const Empty = () => (
+    <View>
+      <Text>Empty</Text>
+    </View>
+  );
 
   return (
     <>
-      <TouchableOpacity
-        onPress={() => setShowModal(true)}
-        style={styles.touchable}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.ownerName}>{stashName}</Text>
-        <Text style={styles.serialNumber}>Serial: {SerialNum}</Text>
-        <Text style={styles.serialNumber}>Description: {desc}</Text>
-      </TouchableOpacity>
+      {expandList ? (
+        <Pressable onPress={() => setExpandList(!expandList)} style={styles.outStyle}>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showModal}
-        onRequestClose={() => setShowModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Item Details</Text>
-            <Text style={styles.modalText}>{stashName}</Text>
-            <Text style={styles.modalText}>{SerialNum}</Text>
-
-            <View style={styles.rewardContainer}>
-              <Text style={styles.rewardText}>Reward Eligible:</Text>
-              <Switch
-                value={isRewardEligible}
-                onValueChange={toggleRewardEligibility}
-                thumbColor={isRewardEligible ? "#1B6B93" : "#888"}
-                trackColor={{ false: "#ddd", true: "#81C1D3" }}
-              />
-            </View>
-
-            <View style={styles.rewardContainer}>
-              <Text style={styles.rewardText}>priorityStatus</Text>
-              <Switch
-                value={priorityStatus}
-                onValueChange={togglePriorityStatus}
-                thumbColor={priorityStatus ? "#1B6B93" : "#888"}
-                trackColor={{ false: "#ddd", true: "#81C1D3" }}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={()=> setShowModal(!showModal)}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.submitButtonText}>Cancel</Text>
-            </TouchableOpacity>
+          <View style={{justifyContent: "center", flexDirection: "row"}}>
+            <Text>{itemName}</Text>
+            <Text>{sp_Number}</Text>
+            <Text>{`${dateAdded} ${timeAdded}`}</Text>
           </View>
-        </View>
-      </Modal>
+
+          <View>
+            <Text>{itemDesc}</Text>
+            <Text style={styles.expandText}>Expand</Text>
+          </View> 
+
+        </Pressable>
+      ) : (
+        <>
+          <Pressable onPress={() => setExpandList(!expandList)} style={styles.touchable}>
+            <View style={{ width: "100%", height: 50, backgroundColor: "orange" }}>
+              <Text style={styles.expandText}>Collapse</Text>
+            </View>
+          </Pressable>
+
+          <FlatList
+            style={[styles.ListGroup, { paddingHorizontal: 10 }]}
+            horizontal
+            data={pictures || []}
+            keyExtractor={(item) => item.uri}
+            renderItem={({ item }) => (
+              <Image
+                style={styles.imageStyle}
+                source={{ uri: `data:image/png;base64,${item.base64}` }}
+                alt="image"
+              />
+            )}
+            ListEmptyComponent={<Empty />}
+          />
+          <Spacer />
+        </>
+      )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
   touchable: {
-    padding: 15,
-    margin: 10,
-    backgroundColor: "#1B6B93",
-    borderRadius: 10,
-    elevation: 5,
-  },
-  ownerName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
-  serialNumber: {
-    fontSize: 14,
-    color: "#D9D9D9",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-  },
-  modalContent: {
-    width: "85%",
+    marginBottom: 3,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 10,
   },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#1B6B93",
+  outStyle: {
+    marginBottom: 4,
+    marginVertical: 3,
+    padding: 10,
+    backgroundColor: 'rgba(230, 235, 227, 0.71)'
   },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 15,
-    color: "#333",
-  },
-  rewardContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  rewardText: {
-    fontSize: 16,
-    color: "#333",
+  imageStyle: {
+    width: 150,
+    height: 200,
+    borderRadius: 5,
     marginRight: 10,
   },
-  submitButton: {
-    backgroundColor: "#1B6B93",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 20,
+  ListGroup: {
+    marginBottom: 3,
+    borderWidth: 1,
+    borderColor: "orange",
   },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
+  expandText: {
+    color: "blue",
     fontWeight: "bold",
+    marginTop: 10,
   },
 });
 

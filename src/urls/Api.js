@@ -7,6 +7,7 @@ const ApiUrl = {
   updateProfile: "update-profile",
   registerItem: "api/addstash",
   SRNcheck: "api/serialNumberCheck",
+  getItems: "getItems",
 }
 
 const api = axios.create({

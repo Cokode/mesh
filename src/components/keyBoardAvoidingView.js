@@ -14,7 +14,7 @@ const KeyboardAvoiding = ({children}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1B6B93',
+    backgroundColor: "rgba(7, 95, 209, 0.3)"
   }
 });
 

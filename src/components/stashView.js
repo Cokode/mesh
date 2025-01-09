@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Modal, Image } from 'react-native';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Dimensions, Modal, Image, FlatList } from 'react-native';
+import { GestureDetector, Gesture, RefreshControl } from 'react-native-gesture-handler';
 import StashTemplate from './stashTemplate';
-import { items } from '../urls/stashObject';
 import Spacer from './spacer';
+import useFetchStashes from '../hooks/useFetchData';
 
 import Animated, {
   useSharedValue,
@@ -13,10 +13,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const screenHeight = Dimensions.get("screen").height;
-const item = items[0];
 
 const StashList = () => {
   const [show, setShow] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const { fetchStashes, errorMessage, stashes } = useFetchStashes();
 
   const offset = useSharedValue({ x: 0, y: 0 });
   const start = useSharedValue({ x: 0, y: 0 });
@@ -34,21 +35,24 @@ const StashList = () => {
     isModalVisible.value = 1;
   };
 
+  const onRefresh = () => {
+    console.log("pressed!");
+    setRefreshing(true);
+    fetchStashes();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
+
   const dragGesture = Gesture.Pan()
-    // .onStart(() => {
-    //   offset.value = {
-    //     x: 0,
-    //     y: prevState.value.y,
-    //   };
-    // })
     .onUpdate((e) => {
       offset.value = withTiming({
         x: start.value.x,
         y: prevState.value.y > 0 ? prevState.value.y + e.translationY : e.translationY,
-      }, {duration : 100});
+      }, { duration: 100 });
     })
     .onEnd((e) => {
-      console.log(" point in time " + e.translationY)
+      console.log(" point in time " + e.translationY);
       if (e.velocityY > 800) {
         console.log("too fast" + e.velocityY);
 
@@ -63,11 +67,11 @@ const StashList = () => {
           offset.value = { x: 0, y: 5000 };
         });
       } else if (e.translationY > screenHeight * 0.4) {
-        console.log(screenHeight + ": :" + e.translationY + " last: " + last)
+        console.log(screenHeight + ": :" + e.translationY + " last: " + last);
         offset.value = withTiming({ x: start.value.x, y: last }, { duration: 400 });
         prevState.value.y = last;
       } else if (e.translationY < (screenHeight / 2) && offset.value.y > 100) {
-        console.log(e.translationY + " lesser than s / 2 ") // TODO
+        console.log(e.translationY + " lesser than s / 2 ");
         offset.value = withTiming({ x: start.value.x, y: e.translationY * 1.6 }, { duration: 400 });
         prevState.value.y = last * 1.6;
       } else {
@@ -88,12 +92,17 @@ const StashList = () => {
 
   return (
     <>
-      <StashTemplate value={item} onpress={showModal} />
-      <StashTemplate value={item} onpress={showModal} />
-      <StashTemplate value={item} onpress={showModal} />
-      <StashTemplate value={item} onpress={showModal} />
-      <StashTemplate value={item} onpress={showModal} />
-      <StashTemplate value={item} onpress={showModal} />
+      <FlatList
+        data={stashes}
+        keyExtractor={item => item.uri}
+        renderItem={({ item }) => <StashTemplate value={item} onpress={showModal} />}
+        showsVerticalScrollIndicator={true}
+        ListEmptyComponent={<Text>No data available. Pull down to refresh.</Text>}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -106,9 +115,8 @@ const StashList = () => {
               <View style={styles.animatedView}>
                 <View style={styles.dragIndicator} />
                 <Spacer />
-                {/*<Button title='close me' onPress={() => setShow(!show)} /> */}
                 <Text>Hello everyone</Text>
-                 <Image style={styles.image} source={{url:"https://i.ibb.co/y4FY2cF/download.jpg"}} />
+                <Image style={styles.image} source={{ uri: "https://i.ibb.co/y4FY2cF/download.jpg" }} />
               </View>
             </Animated.View>
           </View>

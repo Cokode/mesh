@@ -1,33 +1,49 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { api, ApiUrl } from "../urls/Api";
+import { AUTH_TOKEN } from "@env";
 
 
-const useFetchData = (url) => {
-  const [data, setData] = useState(null);
+const useFetchStashes = () => {
+  const [stashes, setStashes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
 
-  const fectData = async() => {
+  const fetchStashes = async () => {
     try {
-        setLoading(true);
-        const response = await axios.get(url) // extend it later
-        setData(response.data);
+      console.log("Inside fetch API", ApiUrl.getItems);
+      setLoading(true);
+
+      const response = await api.get(ApiUrl.getItems, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": AUTH_TOKEN
+        },
+        withCredentials: true,
+      });
+
+      if (response.status === 404) {
+        setErrorMessage("No items found.");
+        //setStashes([]);
+      } else if (!response.data) {
+        setErrorMessage("Cannot get stashes.");
+      } else {
+        setStashes(response.data);
         setErrorMessage("");
+      }
     } catch (error) {
-      setErrorMessage('something went bad');
+      console.error("Error in fetchStashes:", error);
+      setErrorMessage(error.response?.data?.error || 'Something went wrong');
     } finally {
-      setLoading(!loading);
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fectData();
-  }, [url]);
+    fetchStashes();
+  }, []);
 
+  return { fetchStashes, errorMessage, loading, stashes };
+};
 
-  return {fectData, errorMessage, loading, data};
-}
-
-export default useFetchData;
+export default useFetchStashes;

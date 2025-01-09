@@ -18,7 +18,7 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
  
   const [ form, setForm ] = useState (newItem);
   const [ imageData, setImageData ] = useState([]);
-   // const [ lockSubmit, setLockSubmit ] = useState(true); OMITTING FOR NOW
+  const [ lockSubmit, setLockSubmit ] = useState(false);
 
   const imageUpdater = async () => {
     const isEmptySet = imageData.length <= 0;
@@ -45,23 +45,26 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
     console.log("ending line..........");
   };
 
+  const preSubmit = () => {
+    if (imageData.length < 1) return;
+    console.log("Length ImageData: " + imageData.length);
+    console.log("Length ImageData: " + imageData.uri);
+       
+    setLockSubmit(lockSubmit);
+   // imageData.forEach(e => e.base64 = "");
+
+    let copyImage = imageData.filter((e) => e.uri !== "uploader");
+    
+    let copy = {...form, pictures: [...copyImage]};
+    console.log("Pictures: "+ copy.pictures.length)
+
+    submitAction(copy);
+  };
+
   const handleDelete = (item) => {
     const result = (prev) => prev.filter((i) => i.uri !== item.uri)
     setImageData(result);
   };
-
-  const handleSubmit = () => {
-
-    // const nonEmptyValues = [form.sp_Number, form.stashName]; // Array of strings to check
-    // let  allEmpty = nonEmptyValues.every(str => str === "");
-
-     if (imageData.length > 1) {
-      console.log("main coding begings here");
-      console.log(form)
-    }
-
-    return;
-  }
 
   return (
     <View>
@@ -114,7 +117,7 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
         />
       )}
 
-      {form.category === "Pet" && (
+      {form.category === "Pets" && (
         <InputSection
           label="Tag Number"
           value={form.tagNumber}
@@ -122,7 +125,7 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
         />
       )}
 
-      {form.category !== "Others" && form.category !== "Pet" && (
+      {form.category !== "Others" && form.category !== "Pets" && (
         <InputSection
           label="Serial / Product Number"
           value={form.sp_Number}
@@ -138,8 +141,8 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
       />
       <InputSection
         label="Description"
-        value={form.desc}
-        onChangeText={(text) => setForm({ ...form, desc: text })}
+        value={form.itemDesc}
+        onChangeText={(text) => setForm({ ...form, itemDesc: text })}
         multiline
         maxLength={300}
         onFocus={() => bottomPad(50)}
@@ -150,8 +153,8 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
       <TouchableOpacity
         style={styles.buttonGroup}
         activeOpacity={0.6}
-        onPress={handleSubmit}
-        disabled={false}
+        onPress={preSubmit}
+        disabled={lockSubmit}
       >
         <Text style={styles.buttonText}>Register Stash</Text>
       </TouchableOpacity>

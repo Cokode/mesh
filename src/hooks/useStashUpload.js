@@ -4,26 +4,19 @@ import axios from "axios";
 import { ApiUrl, api } from "../urls/Api";
 import { AUTH_TOKEN } from "@env";
 
-const useStashUpload = (imageData, formData) => {
+const useStashUpload = (form) => {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
 
-  const uploadToIMGBB = async () => {
-    if (!imageData) return;
+  const uploadForm = async () => {
+    if (!form) return;
   
     try {
-      setLoading(true);
-  
-      // Prepare FormData
-      const formData = new FormData();
-      formData.append("image", imageData.base64);
-  
-      // API request
       const response = await api.post(ApiUrl.registerItem,
-        formData,
+        form,
         {
           headers: { 
             // "Content-Type": "multipart/form-data" 
@@ -34,9 +27,8 @@ const useStashUpload = (imageData, formData) => {
       );
   
       if (response) {
-        
-        setData(uploadedData);
-        setErrorMessage("Sucess.");
+        setData(response.data.message);
+        setErrorMessage("");
       } else {
         setErrorMessage("Image upload failed.");
       }
@@ -48,10 +40,10 @@ const useStashUpload = (imageData, formData) => {
   };
 
   useEffect(() => {
-    if (imageData) uploadToIMGBB();
-  }, [imageData]);
+    if (form) uploadForm();
+  }, [form]);
 
-  return { uploadToIMGBB, errorMessage, loading, data };
+  return { uploadForm, errorMessage, loading, data };
 };
 
 export default useStashUpload;

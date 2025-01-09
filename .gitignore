@@ -18,6 +18,7 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 toDelete.js
+useUploadImage.js
 
 # Metro
 .metro-health-check*
