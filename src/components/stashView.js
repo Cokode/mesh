@@ -4,49 +4,28 @@ import { GestureDetector, Gesture, RefreshControl } from 'react-native-gesture-h
 import StashTemplate from './stashTemplate';
 import Spacer from './spacer';
 import useFetchStashes from '../hooks/useFetchData';
-import { clamp } from 'react-native-redash';
+import { clamp, withBouncing } from 'react-native-redash';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
+  withSpring,
   runOnJS,
   withClamp,
+  withDecay,
+  Easing
 } from 'react-native-reanimated';
 
-const screenHeight = Dimensions.get("screen").height;
+let screenHeight = Dimensions.get("screen").height;
 
 const StashList = () => {
   const [show, setShow] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { fetchStashes, errorMessage, stashes } = useFetchStashes();
+  const [screenH, SetScreenH] = useState(screenHeight * 0.9)
 
-  const offset = useSharedValue({ x: 0, y: screenHeight}); // Start at y = 700
-  const start = useSharedValue({ x: 0, y: screenHeight * -1 });
-
-  const prevState = useSharedValue({ x: 0, y: 0 });
-  const isModalVisible = useSharedValue(1);
-  const last = screenHeight * 0.3;
-
-  const hideModal = () => {
-    console.log("pressed Hide Modal.")
-    setShow(!show); 
-  };
-
-  const showModal = () => {
-    offset.value = { x: 0, y: 0 };
-    setShow(!show);  
-    isModalVisible.value = 1;
-  };
-
-  const onRefresh = () => {
-    setRefreshing(true);
-
-    fetchStashes();
-
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  };
+  const offset = useSharedValue({ x: 0, y: 0 });
+  const start = useSharedValue({ x: 0, y: 0 });
 
   
   const animatedStyle = useAnimatedStyle(() => ({
@@ -58,23 +37,67 @@ const StashList = () => {
   }));
 
   const panGesture = Gesture.Pan()
+  .onBegin(() => {
+    console.log("Screen Height" + screenHeight)
+    console.log("Start Y: ", + start.value.y)
+    offset.value = { ...start.value };
+  })
+  .onStart((e) => {
+
+    console.log(`onStart E: ${e.translationY} ___  Start: ${start.value.y}`)
+    offset.value = {
+      x: start.value.x,
+      y: start.value.y + e.translationY}
+     
+  })
   .onUpdate((e) => {
     // Clamp the movement and update offset
-    offset.value = {
+    // Math.max(e.translationY+ start.value.y, 0 )}
+    console.log(`Start-Y: ${start.value.y} +  e.Y: ${e.translationY}  =>  Total: ${e.translationY + start.value.y}`)
+    console.log("\n")
+    let valueY = e.translationY+ start.value.y;
+
+    offset.value = withTiming({
       x: 0,
-      y: Math.max(e.translationY + start.value.y, 0),
-    };
+      y: Math.max(e.translationY+ start.value.y, 0)}, {duration: 100}
+    ) 
   })
-  .onEnd((e) => {
-    // Save the current position as the new start point
-    start.value = { ...offset.value };
-  });
+  .onEnd(() => {
+    const threshold = (screenHeight / 2) * .7; // Halfway point for bounce back
+    const shouldSettleAtBottom = start.value.y >= threshold;
+
+    offset.value = withSpring({x: 0, y: 0}, {stiffness: 50, damping: 40 })
+    start.value = {x: 0, y: 0 }; 
+  }).
+  runOnJS(true);
 
   const handleFocus = () => {
     inputRef.current?.focus();
   };
     
 
+  
+  const hideModal = () => {
+    console.log("pressed Hide Modal.")
+    setShow(!show); 
+   start.value = withTiming({x: 0, y: 0})
+   offset.value = withTiming({x: 0, y: 0})
+  };
+
+  const showModal = () => {
+    offset.value = { x: 0, y: 0 };
+    setShow(!show);  
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    fetchStashes();
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   return (
     <>
@@ -118,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animatedView: {
-    height: screenHeight * 0.95,
+    height: screenHeight * 0.9,
     backgroundColor: '#f9f9f9',
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
