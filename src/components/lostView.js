@@ -8,12 +8,12 @@ import {
   FlatList, Image,
    Modal, TouchableWithoutFeedback,
     Dimensions, TextInput,
-    Keyboard
+    Keyboard,
   } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Spacer from "./spacer";
 import InputSection from "./textInput";
-import { clamp, withBouncing } from 'react-native-redash';
+import { clamp } from 'react-native-redash';
 import Entypo from '@expo/vector-icons/Entypo';
 
 import Animated, {
@@ -23,6 +23,7 @@ import Animated, {
   runOnJS,
   withSpring,
   ReduceMotion,
+  Easing
 } from 'react-native-reanimated';
 
 const screenHeight = Dimensions.get("screen").height;
@@ -36,6 +37,7 @@ const LostView = ({ item, handleReport }) => {
   const [comment, setComment] = useState("");
   const [show, setShow] = useState(false);
   const [image, setImage] = useState({});
+  const [isModalDown, setIsModalDown] = useState(false);
 
   const sideY = useSharedValue(630);
   const inputRef = useRef(null);
@@ -43,9 +45,13 @@ const LostView = ({ item, handleReport }) => {
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener("keyboardWillHide", () => {
      // setShow(false); // Directly set to `false` to avoid potential state toggling issues
-     sideY.value = withTiming(730, { duration: 320, damping: 100 });
-    //  setShow(false);
+     const customEasing = (t) => 1 - Math.pow(1 - t, 3);
+     sideY.value = withTiming(730, { 
+      duration: 280, 
+      easing: Easing.out(Easing.quad) }) 
     });
+
+    setIsModalDown(true);
   
     // Clean up the listener when the component unmounts
     return () => {
@@ -57,15 +63,13 @@ const LostView = ({ item, handleReport }) => {
     const keyboardDidHideListener = Keyboard.addListener("keyboardWillShow", () => {
      // setShow(false); // Directly set to `false` to avoid potential state toggling issues
 
-     if (sideY.value >= 730) {
-      // sideY.value = withSpring(410, 
-      //   { stiffness: 50, damping: 10,
-      //     mass: 1, overshootClamping: false,
-      //     restDisplacementThreshold: 1,
-      //     restSpeedThreshold: 2, reduceMotion: ReduceMotion.System
-      //    });
+     setIsModalDown(false)
 
-      sideY.value = withSpring(410, {stiffness: 150, damping: 60})
+     if (sideY.value >= 730) {
+      sideY.value = withSpring(425, 
+        {stiffness: 360, damping: 60, mass: 1,
+          overshootClamping: true, restDisplacementThreshold: 0.01
+        })
      }
     });
   
@@ -82,7 +86,7 @@ const LostView = ({ item, handleReport }) => {
   }
 
   const showModal = () => { 
-    sideY.value = withTiming(410, { duration: 200 });
+    sideY.value = withTiming(425, { duration: 200 });
     setShow(true);
     setTimeout(() => {
       inputRef.current?.focus();
@@ -107,6 +111,14 @@ const LostView = ({ item, handleReport }) => {
       <Text></Text>
     </View>
   );
+
+  const handleOutsidePress = (event) => {
+    // Check if the target is not the TextInput or Pressable
+    if (event.target !== inputRef?.current && event.target !== "submitButton") {
+      Keyboard.dismiss();
+    }
+    Keyboard.focus()
+  };
 
   return (
     <>
@@ -171,10 +183,10 @@ const LostView = ({ item, handleReport }) => {
         visible={show}
         onRequestClose={() => setShow(!show)}
       >
-        <View>
+        <TouchableWithoutFeedback onPress={handleOutsidePress} >
           <GestureDetector gesture={panGesture}>
             <View style={styles.gestureContainer}>
-              <Animated.View style={animatedStyle}>
+              <Animated.View style={animatedStyle}> 
                 <View onPress={hideModal} style={styles.animatedView}>
                     <View style={ styles.inputContainer}>
                       <TextInput 
@@ -186,14 +198,19 @@ const LostView = ({ item, handleReport }) => {
                         value={comment}
                         onChangeText={(e) => setComment(e)}
                         showsHorizontalScrollIndicator
-
+                        // onBlur={()=> setIsModalDown(true)}
                       /> 
                     </View>
+                  {true &&
+                    <Pressable onPress={()=> setShow(false)} style={styles.submitStyle} hitSlop={10} testID="submitButton">
+                        <Text style={{fontWeight: 400, fontSize: 14}}>{isModalDown ? "Submit" : "Done" }</Text>
+                    </Pressable> 
+                  }
                 </View>
               </Animated.View>
             </View>
           </GestureDetector>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   );
@@ -202,14 +219,21 @@ const LostView = ({ item, handleReport }) => {
 const styles = StyleSheet.create({
   inputStyle: {
     fontSize: 16,
-    padding: 15,
+    padding: 12,
+  },
+  submitStyle: {
+    // backgroundColor: "red",
+    flex: 1,
+    padding: 10
   },
   inputContainer: {
-    width:"95%",
-    backgroundColor: "rgb(233, 225, 225)",
+    width: "78%",
+    backgroundColor: "#d7dbdd",
     borderWidth: 0.2,
     borderColor: "rgb(191, 211, 211)",
-    borderRadius: 20
+    borderRadius: 20,
+    height: 40,
+    marginLeft: 10
   },
   touchable: {
     // marginBottom: 3,
@@ -225,17 +249,16 @@ const styles = StyleSheet.create({
   },
   gestureContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
   },
   animatedView: {
+    flexDirection: "row",
     height: screenHeight / 2,
-    // backgroundColor: '#f9f9f9',
-    backgroundColor : "#454545",
+    backgroundColor : "rgb(233, 233, 235)",
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
-    paddingTop:10,
-
-    alignItems: 'center',
+    paddingVertical: 5,
+    alignContent: "space-around",
     shadowColor: "#000",
     shadowsideY: {
       width: 0,
