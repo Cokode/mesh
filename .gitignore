@@ -9,6 +9,9 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+CommentScrn.js
+sGitDiff.sh
+test
 
 # Native
 *.orig.*

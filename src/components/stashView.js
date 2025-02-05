@@ -59,14 +59,14 @@ const StashList = () => {
 
     offset.value = withTiming({
       x: 0,
-      y: Math.max(e.translationY+ start.value.y, 0)}, {duration: 100}
+      y: Math.max(e.translationY+ start.value.y, 0)}, {duration: 5}
     ) 
   })
   .onEnd(() => {
     const threshold = (screenHeight / 2) * .7; // Halfway point for bounce back
     const shouldSettleAtBottom = start.value.y >= threshold;
 
-    offset.value = withSpring({x: 0, y: 0}, {stiffness: 50, damping: 40 })
+    offset.value = withSpring({x: 0, y: 0}, {stiffness: 250, damping: 150 })
     start.value = {x: 0, y: 0 }; 
   }).
   runOnJS(true);
@@ -125,7 +125,7 @@ const StashList = () => {
                 <View style={styles.dragIndicator} />
                 <Spacer />
                 <Text onPress={hideModal} >Hello everyone here</Text>
-                <Image style={styles.image} source={{ uri: "https://i.ibb.co/y4FY2cF/download.jpg" }} />
+                <Image style={styles.image} source={require("../../assets/myIMGs/image2.png")} />
               </View>
             </Animated.View>
           </View>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   animatedView: {
-    height: screenHeight * 0.9,
+    height: screenHeight * 0.95,
     backgroundColor: '#f9f9f9',
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,

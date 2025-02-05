@@ -65,10 +65,7 @@ const Card = ({ image, style, item }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 10, borderRadius: 10, borderBlockColor: "#CECECE", borderWidth: 1, marginTop: 5}, // backgroundColor: "#fff" },
-  // image: { width: 100, height: 100 },
-  // text: { fontSize: 16, marginTop: 5 },
-  
+  container: { padding: 10, borderRadius: 10, borderBlockColor: "#CECECE", borderWidth: 1, marginTop: 5},
 });
 
 export default Card;

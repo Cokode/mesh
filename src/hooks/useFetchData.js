@@ -11,12 +11,11 @@ const useFetchStashes = () => {
 
   const fetchStashes = async () => {
     try {
-      console.log("Inside fetch API", ApiUrl.getItems);
       setLoading(true);
 
       const response = await api.get(ApiUrl.getItems, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
           "Authorization": AUTH_TOKEN
         },
         withCredentials: true,

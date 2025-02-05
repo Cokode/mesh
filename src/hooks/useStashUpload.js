@@ -8,7 +8,7 @@ const useStashUpload = (form) => {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] =  useState("");
 
 
   const uploadForm = async () => {
@@ -20,9 +20,9 @@ const useStashUpload = (form) => {
         {
           headers: { 
             // "Content-Type": "multipart/form-data" 
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json; charset=utf-8", 
             "Authorization": AUTH_TOKEN,
-          },
+          }, 
         }
       );
   

@@ -8,6 +8,8 @@ const ApiUrl = {
   registerItem: "api/addstash",
   SRNcheck: "api/serialNumberCheck",
   getItems: "getItems",
+  loadReport: "loadReport",
+  getReport: "getReport"
 }
 
 const api = axios.create({

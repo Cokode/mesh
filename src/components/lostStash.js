@@ -1,96 +1,133 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Pressable } from "react-native";
 import { stashProp } from "../urls/stashObject";
+import ImageModal from "../views/imageModal";
+import Card from "./userCard";
 
 
 
 const LostStash = (props) => {
   const navigation = useNavigation();
+  const [image, setImage] = useState("");
+  const [showPicture, setShowPicture] = useState(false);
 
-  const { ownerNames, picture,
-    stashName,
-    desc,
-    SerialNum,
-    date,
-    timePosted,
-    rewardEligibility,
-    priorityStatus,
-    lastKLoc,
-    imageAddress} = props;
+  const { pictures, itemName, stashName, desc, SerialNum, lost_comment, item  } = props;
+
+  const FullImage = (value) => {
+    console.log(value.assetId);
+    console.log(value._id + " Image ID");
+    setImage(value);
+    setShowPicture(true);
+  };
 
   return (
-    <View>
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => navigation.navigate('View', {stash: props})}
-        activeOpacity={0.6}
-        underlayColor ='red'
-      >
-        <View style={styles.picture}>
-        <Image style={styles.pictureImage} source={require('../../assets/myIMGs/image2.png' )}/>
-        </View>
-        <View style={styles.view}>
-        <Text style={{fontSize: 16, fontWeight: 500}}>{ownerNames}</Text>
-        <Text>{stashName}</Text>
-        <Text>{desc}</Text>
-        <Text>{SerialNum}</Text>
-        </View>
-        <View style={styles.viewImage}>
-          <Image style={styles.image} source={require('../../assets/myIMGs/image.png' )}/>
-        </View>
-      </TouchableOpacity>
-    </View>
-  )
-}
+    <>
+      <Card item={item} style={styles} image={image}/>
+
+      <FlatList
+        style={styles.imageWrapper}
+          data={pictures}
+          horizontal
+          showsHorizontalScrollIndicator={true}
+          keyExtractor={(item, index) => `item-${index}-${item.assetId || 'fallback'}`}
+          renderItem={({ item }) => (
+            <Pressable onPress={() => FullImage(item)}>
+              <Image
+              style={styles.imageStyle}
+                source={{ uri: `data:image/png;base64,${item.base64}` }}
+                alt="image"
+              />
+            </Pressable>
+          )}
+        />
+
+        <View style={styles.pressAreaWrapper}>
+          <Pressable style={({ pressed }) => (pressed ? styles.highlight : styles.pressable)} >
+            <Image style={styles.infoStyle} source={require("../../assets/myIMGs/pan_tool.png")}/>
+            <Text style={styles.labelStyle}>I Found it</Text>
+          </Pressable>
+
+        </View> 
+
+        <ImageModal
+          image={image}
+          showPicture={showPicture}
+          setShowPicture={() => setShowPicture(false)}
+        />
+    
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',//'#9ABF80', //'#B3C8CF',
-    height: '50px',
-    width: "102%",
-    alignSelf: 'center',
-    borderRadius: 2,
+  pressAreaWrapper: {
+    borderBlockColor: '#CECECE',
     borderWidth: 1,
-    borderColor: '#EEEEEE', //#EEEEEE',
-    padding: 10,
-    marginRight: 5,
-    flexDirection: 'row'
   },
-  picture: {
-    width: '10%',
-    height: '34%',
-    margin: 1,
-    // backgroundColor: '#CCD5AE',
-    borderRadius: 20,
+  commenetExpandStyle: {
+    display: "flex",
+    width: "100%",
+    borderBlockColor: '#CECECE',
+    borderWidth: 1
   },
-  pictureImage: {
-    width: '100%',
-    height: '90%',
-    borderRadius: 20,
+  commenetStyle: {
+   display: "flex",
+    width: "100%",
+    height:"auto",
+    backgroundColor: "white",
+    borderBlockColor: '#CECECE',
+    borderWidth: 1
   },
-  view: {
-    flex: 4,
-    margin: 3,
-    backgroundColor: '#CCD5AE',
-    borderRadius: 15,
-    padding: 15
+  labelStyle: {
+    fontSize: 15,
   },
-  viewImage: {
-    flex: 2,
-    margin: 3,
-    height: '80%',
-    width: '100%',
-    // backgroundColor: '#CCD5AE',
-    borderRadius: 20,
-    paddingBottom: 15
+  imageWrapper: {
+    backgroundColor: "#f5f5f5", 
+    paddingVertical: 10
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 20,
-  }
+  imageStyle: {
+    width: 365,
+    height: 250,
+    // borderRadius: 10,
+    marginRight: 1.5,
+    marginBottom: 1.5,
+    shadowColor: 'rgb(0, 0, 0)',
+    shadowsideY: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    elevation: 5,
+  },
+  infoStyle: {
+    height: 25,
+    width: 25,
+    paddingRight: 5
+  },
+  highlight: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "grey",
+    opacity: 0.4,
+    padding: 5
+  },
+  pressable: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    width: "100%",
+    padding: 5
+  },
+  imgeStyle: {
+    width: 15, 
+    height: 10,
+    color: '#CECECE'
+  },
+  detailsWrapper: {display: "flex", flexDirection: "row", alignItems: "center"},
+  imageMemeStyle: {width: 30, height: 30 , borderRadius: 20}
 })
 
 

@@ -29,14 +29,14 @@ function StashScreens() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: 'transparent',
-          position: 'absolute',
-          // zIndex: 100,
-          // top: 0,
-          // left: 0,
-          // right: 0,
+          // backgroundColor: '#25292e', // dark color
+          backgroundColor: "#39d9d5"
+          // position: 'absolute',
         },
-        headerTintColor: '#000', // Optional: to set the color of the header text and icons
+        tabBarStyle: {
+          // backgroundColor: '#25292e'
+        },
+        headerTintColor: '#fff', // Optional: to set the color of the header text and icons
       }}
     >
       <Stack.Screen
@@ -69,11 +69,13 @@ function MainScreens() {
         },
         tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'gray',
+        headerTintColor: "#fff"
       }}
     >
       <Tab.Screen
         name="Home"
         component={StashScreens}
+        // headerTintColor= "black"
         options={{
           tabBarIcon: ({focused, color, size}) => 
             {
@@ -83,8 +85,12 @@ function MainScreens() {
               return  (<Ionicons name={focused ? 'home-sharp' :iconName } size={size} color={color} />)
             },
           headerShown: false,
-          tabBarBadge: 3
-        }}
+          tabBarBadge: 3,
+          tabBarStyle: {
+            // backgroundColor: '#25292e' // remove or customize later 
+          },
+        }
+      }
       />
       <Tab.Screen
         name="Report"

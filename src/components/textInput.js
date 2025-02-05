@@ -1,30 +1,30 @@
 import React from "react";
-import { Text, View, TextInput, StyleSheet, Pressable } from "react-native";
+import { Text, View, Image, TextInput, StyleSheet, Pressable } from "react-native";
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Octicons from '@expo/vector-icons/Octicons';
 
 
 
-const InputSection = ({CloseCard, openModal}) => {
+const InputSection = ({CloseCard, openModal, report}) => {
 
   return (
     <>
-      <View style={{flexDirection: "row", alignContent: "space-around", paddingHorizontal: 20, paddingVertical: 8, marginBottom: 5, backgroundColor: "white" }}>
+      <View style={styles.inputWrapper}>
       
-        <Pressable onPress={CloseCard} style={{ paddingRight: 50, flexDirection: "row", alignItems: "center" }} >
-          <AntDesign name="up" size={24} color="black" />
+        <Pressable onPress={CloseCard} style={styles.closeStyle} >
+        <Image style={{width: 25, height: 28, alignSelf: "center"}} source={require("../../assets/myIMGs/close.png")} />
           <Text> Close </Text>
-        </Pressable> 
-
-        <Pressable onPress={openModal} style={{ paddingRight: 50, flexDirection: "row", alignItems: "center" }}>
-          <EvilIcons name="comment" size={24} color="black" />
-          <Text> Comment </Text>
         </Pressable>
 
-        <Pressable style={{ flexDirection: "row", alignItems: "center" }} >
-          <Octicons name="report" size={20} color="black" />
-          <Text> Report </Text>
+        <Pressable onPress={openModal} style={styles.commentStle}>
+        <Image style={styles.imgeStyle} source={require("../../assets/myIMGs/notes_24dp_000000.png")} />
+          <Text> Comment </Text>
+        </Pressable> 
+
+        <Pressable onPress={report} hitSlop={20} pressRetentionOffset={10} style={ ({ pressed }) => (pressed ? styles.highlight : styles.pressable)}>
+          <Image style={styles.imgeStyle} source={require("../../assets/myIMGs/add_photo_alternate_24dp_000000.png")} />
+          <Text> Add image </Text>
         </Pressable>
       </View>
     </>
@@ -32,7 +32,37 @@ const InputSection = ({CloseCard, openModal}) => {
 }
 
 const styles = StyleSheet.create({
+  imgeStyle: {
+    width: 25, 
+    height: 25
+  },
+  highlight: {
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: "row", 
+    alignItems: "center", 
+  },
+  closeStyle: {
+    flexDirection: "row", 
+    alignItems: "center" 
+  },
+  pressable: {
+    flexDirection: "row", 
+    alignItems: "center" 
+  },
+  commentStle: {
+    flexDirection: "row", 
+    alignItems: "center" 
+  },
+  inputWrapper : {
+    flexDirection: "row", 
+    alignContent: "space-around", 
+    paddingHorizontal: 20, 
+    paddingVertical: 8, 
+    marginBottom: 5, 
+    backgroundColor: "white", 
+    gap: 40,
 
+  }
 });
 
 export default InputSection;

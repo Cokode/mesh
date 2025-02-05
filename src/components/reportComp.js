@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input, Text } from "@rneui/base";
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Pressable } from "react-native";
 import ModalSelector from 'react-native-modal-selector';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Fontisto from '@expo/vector-icons/Fontisto';
@@ -127,14 +127,14 @@ const ReportComp = (props) => {
       />
     </View>
 
-    <TouchableOpacity style={styles.buttonGroup} activeOpacity={.6} onPress={() => {
+    <Pressable style={styles.buttonGroup} activeOpacity={.6} onPress={() => {
       
       console.log(value)
       alert('Registered!')}
       
       }>
       <Text style={styles.buttonText}>Submit</Text>
-    </TouchableOpacity>
+    </Pressable>
     </ScrollView>
   )
 };

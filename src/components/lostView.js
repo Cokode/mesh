@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import {GestureHandlerRootView,  GestureDetector, Gesture} from 'react-native-gesture-handler';
+import {GestureDetector, Gesture} from 'react-native-gesture-handler';
+import useLoadReport from "../hooks/useLoadReport";
 import { 
   Text, 
   StyleSheet, 
@@ -10,11 +11,7 @@ import {
     Dimensions, TextInput,
     Keyboard,
   } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Spacer from "./spacer";
 import InputSection from "./textInput";
-import { clamp } from 'react-native-redash';
-import Entypo from '@expo/vector-icons/Entypo';
 
 import Animated, {
   useSharedValue,
@@ -28,7 +25,6 @@ import Animated, {
 
 const screenHeight = Dimensions.get("screen").height;
 
-
 const LostView = ({ item, handleReport }) => {
   const { itemName, sp_Number, dateAdded, timeAdded, pictures, itemDesc } = item;
 
@@ -38,6 +34,8 @@ const LostView = ({ item, handleReport }) => {
   const [show, setShow] = useState(false);
   const [image, setImage] = useState({});
   const [isModalDown, setIsModalDown] = useState(false);
+  const { handleSubmit, loading, errorMessage } = useLoadReport();
+  
 
   const sideY = useSharedValue(630);
   const inputRef = useRef(null);
@@ -45,24 +43,38 @@ const LostView = ({ item, handleReport }) => {
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener("keyboardWillHide", () => {
      // setShow(false); // Directly set to `false` to avoid potential state toggling issues
-     const customEasing = (t) => 1 - Math.pow(1 - t, 3);
-     sideY.value = withTiming(730, { 
+     setIsModalDown(true)
+
+      const customEasing = (t) => 1 - Math.pow(1 - t, 3);
+      sideY.value = withTiming(730, { 
       duration: 280, 
       easing: Easing.out(Easing.quad) }) 
-    });
 
-    setIsModalDown(true);
-  
+    });
     // Clean up the listener when the component unmounts
     return () => {
       keyboardDidHideListener.remove();
     };
   }, []);
 
+  const printcomment = (value) => {
+    // console.log("Comment Value: ", comment)
+    // console.log("Param Value:    "+  value)
+
+    if (!comment) {
+      sideY.value = withTiming(800, { 
+      duration: 10, 
+       easing: Easing.out(Easing.quad) }) 
+  
+
+      setIsModalDown(true);
+      setShow(false);
+    }
+  } 
+
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener("keyboardWillShow", () => {
      // setShow(false); // Directly set to `false` to avoid potential state toggling issues
-
      setIsModalDown(false)
 
      if (sideY.value >= 730) {
@@ -81,6 +93,7 @@ const LostView = ({ item, handleReport }) => {
 
   const FullImage = (value) => {
     console.log(value.assetId)
+    console.log(image._id + " Image ID")
     setImage(value);
     setShowPicture(!showPicture);
   }
@@ -118,6 +131,12 @@ const LostView = ({ item, handleReport }) => {
       Keyboard.dismiss();
     }
     Keyboard.focus()
+  };
+
+  const onSubmit = async () => {
+    const result = await handleSubmit(comment, item._id, 2);
+    console.log(result, " in onSubmit"); // Handle the result if needed
+    setTimeout(()=> console.log("loading", loading), 300); // STATUS OF LOADING DOES NOT CHANGE. 
   };
 
   return (
@@ -198,12 +217,13 @@ const LostView = ({ item, handleReport }) => {
                         value={comment}
                         onChangeText={(e) => setComment(e)}
                         showsHorizontalScrollIndicator
-                        // onBlur={()=> setIsModalDown(true)}
+                        onBlur={() => printcomment(comment)}
+                        onEndEditing={()=> setComment(comment? comment + "END OF COMMENT": comment)} // TODO: 
                       /> 
                     </View>
                   {true &&
-                    <Pressable onPress={()=> setShow(false)} style={styles.submitStyle} hitSlop={10} testID="submitButton">
-                        <Text style={{fontWeight: 400, fontSize: 14}}>{isModalDown ? "Submit" : "Done" }</Text>
+                    <Pressable onPress={onSubmit} style={styles.submitStyle} hitSlop={10} testID="submitButton">
+                        <Text style={{fontWeight: 400, fontSize: 14}}>{ isModalDown ? "Submit" : "Done" }</Text>
                     </Pressable> 
                   }
                 </View>
@@ -281,7 +301,7 @@ const styles = StyleSheet.create({
     height: 250,
     borderRadius: 10,
     marginRight: 10,
-    marginBottom: 3,
+    marginBottom: 1.5,
     shadowColor: 'rgb(0, 0, 0)',
     shadowsideY: {
       width: 4,
