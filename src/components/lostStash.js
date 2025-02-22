@@ -5,8 +5,6 @@ import { stashProp } from "../urls/stashObject";
 import ImageModal from "../views/imageModal";
 import Card from "./userCard";
 
-
-
 const LostStash = (props) => {
   const navigation = useNavigation();
   const [image, setImage] = useState("");
@@ -43,7 +41,7 @@ const LostStash = (props) => {
         />
 
         <View style={styles.pressAreaWrapper}>
-          <Pressable style={({ pressed }) => (pressed ? styles.highlight : styles.pressable)} >
+          <Pressable  onPress={() => navigation.navigate('View', { stash: item })} style={({ pressed }) => (pressed ? styles.highlight : styles.pressable)} >
             <Image style={styles.infoStyle} source={require("../../assets/myIMGs/pan_tool.png")}/>
             <Text style={styles.labelStyle}>I Found it</Text>
           </Pressable>

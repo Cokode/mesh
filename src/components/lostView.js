@@ -134,7 +134,7 @@ const LostView = ({ item, handleReport }) => {
   };
 
   const onSubmit = async () => {
-    const result = await handleSubmit(comment, item._id, 2);
+    const result = await handleSubmit(comment, item._id);
     console.log(result, " in onSubmit"); // Handle the result if needed
     setTimeout(()=> console.log("loading", loading), 300); // STATUS OF LOADING DOES NOT CHANGE. 
   };
@@ -218,7 +218,6 @@ const LostView = ({ item, handleReport }) => {
                         onChangeText={(e) => setComment(e)}
                         showsHorizontalScrollIndicator
                         onBlur={() => printcomment(comment)}
-                        onEndEditing={()=> setComment(comment? comment + "END OF COMMENT": comment)} // TODO: 
                       /> 
                     </View>
                   {true &&

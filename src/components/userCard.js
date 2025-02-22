@@ -1,11 +1,9 @@
 import React, {useState} from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 const Card = ({ image, style, item }) => {
 
   const [expand, setExpand] = useState(false);
-  const navigation = useNavigation();
 
 
   const {rewardEligibility,
@@ -28,7 +26,6 @@ const Card = ({ image, style, item }) => {
     <>
       <Pressable
         style={styles.container}
-        onPress={() => navigation.navigate('View', { stash: item })}
         activeOpacity={0.6}
         >
 
