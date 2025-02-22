@@ -1,0 +1,97 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Image, StyleSheet, Platform, ScrollView, Button, KeyboardAvoidingView, TouchableOpacity, Pressable } from 'react-native';
+import Spacer from './spacer';
+
+export default function wrapper ({ onpress }) {
+
+  const [txtValue, SetTxtValue] = useState("");
+  const placeholder = "...";
+
+    const updateInput = (value) => {
+      SetTxtValue(value);
+    };
+
+  const onSubmit = () => {
+    SetTxtValue(placeholder); // set inpput value to default
+
+    onpress(txtValue);
+  };
+
+    return (
+      <View style={styles.wrapper} >
+        <Text style={styles.inputLabel}>Enter Full Barcode found on product</Text>
+        <Spacer />
+
+        <TextInput 
+          style={styles.input}
+          placeholder= {placeholder}
+          value={txtValue}
+          onChangeText={(data) => (updateInput(data))}
+          inputMode="numeric"
+        />
+
+        <Pressable
+          style={styles.btnHighlight}
+        >
+          <Text style={ styles.btnTxt } onpress={onSubmit}>
+            Submit
+          </Text>
+        </Pressable>
+      </View>
+    );
+};
+
+const styles = StyleSheet.create({
+  wrapper: {
+    display:"flex",
+    width: "100%", // Adjust width as needed
+    borderWidth: 0.3,
+    borderRadius: 12,
+    borderColor: "black",
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  inputLabel: {
+    fontSize: 15,
+    alignSelf: 'center',
+    padding: 10,
+    color: '#000',
+    fontWeight: "400",
+    marginBottom: 5,
+  },
+ 
+  input: {
+    width: '100%',
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    backgroundColor: '#D4EBF8',
+    fontWeight: '700',
+    fontSize: 15
+  },
+  inputName: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    backgroundColor: '#D4EBF8',
+    fontWeight: '700',
+    fontSize: 15
+  },
+  btnStyle: {
+    padding: 20,
+  },
+  btnTxt : {
+    fontSize: 20,
+    color: "#007AFF",
+    fontWeight: "500",
+  },
+  btnHighlight : {
+    padding: 20,
+
+  }
+})
+
