@@ -121,7 +121,7 @@ const StashList = () => {
         <GestureDetector gesture={panGesture}>
           <View style={styles.gestureContainer}>
             <Animated.View style={animatedStyle}>
-              <View onPress={hideModal} style={styles.animatedView}>
+              <View style={styles.animatedView}>
                 <View style={styles.dragIndicator} />
                 <Spacer />
                 <Text onPress={hideModal} >Hello everyone here</Text>
@@ -142,7 +142,8 @@ const styles = StyleSheet.create({
   },
   animatedView: {
     height: screenHeight * 0.95,
-    backgroundColor: '#f9f9f9',
+    // backgroundColor: '#f9f9f9',
+    // backgroundColor: "orange",
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
     padding: 20,

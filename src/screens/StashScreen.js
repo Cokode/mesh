@@ -10,8 +10,8 @@ const StashScreen = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-        <StashView />
-      </GestureHandlerRootView>
+      <StashView />
+    </GestureHandlerRootView>
   );
 };
 

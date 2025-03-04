@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, StyleSheet, Platform, ScrollView, Button, KeyboardAvoidingView, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, TextInput, Image, StyleSheet, Platform, ScrollView, Button, KeyboardAvoidingView, TouchableOpacity, Pressable, Alert } from 'react-native';
 import Spacer from './spacer';
 
 export default function wrapper ({ onpress }) {
-
-  const [txtValue, SetTxtValue] = useState("");
+  const [inputValue, SetinputValue] = useState("");
   const placeholder = "...";
 
-    const updateInput = (value) => {
-      SetTxtValue(value);
-    };
+  const updateInput = (value) => {
+    SetinputValue(value);
+  };
 
   const onSubmit = () => {
-    SetTxtValue(placeholder); // set inpput value to default
+    // SetinputValue(""); // set inpput value to default
 
-    onpress(txtValue);
+    console.log("Hello, Pressed.")
+    onpress(inputValue);
   };
 
     return (
@@ -25,7 +25,7 @@ export default function wrapper ({ onpress }) {
         <TextInput 
           style={styles.input}
           placeholder= {placeholder}
-          value={txtValue}
+          value={inputValue}
           onChangeText={(data) => (updateInput(data))}
           inputMode="numeric"
         />
@@ -33,7 +33,7 @@ export default function wrapper ({ onpress }) {
         <Pressable
           style={styles.btnHighlight}
         >
-          <Text style={ styles.btnTxt } onpress={onSubmit}>
+          <Text disabled={ inputValue.length <= 9 } style={ styles.btnTxt } onPress={ onSubmit }>
             Submit
           </Text>
         </Pressable>
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     marginBottom: 5,
   },
- 
   input: {
     width: '100%',
     padding: 20,
@@ -91,6 +90,7 @@ const styles = StyleSheet.create({
   },
   btnHighlight : {
     padding: 20,
+    // backgroundColor: "orange"
 
   }
 })
