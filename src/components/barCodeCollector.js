@@ -19,7 +19,7 @@ export default function wrapper ({ onpress }) {
 
     return (
       <View style={styles.wrapper} >
-        <Text style={styles.inputLabel}>Enter Full Barcode found on product</Text>
+        <Text style={styles.inputLabel}>Enter full barcode number found on product</Text>
         <Spacer />
 
         <TextInput 
@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   inputLabel: {
-    fontSize: 15,
+    fontSize: 14,
     alignSelf: 'center',
-    padding: 10,
+    paddingVertical: 10,
     color: '#000',
     fontWeight: "400",
     marginBottom: 5,

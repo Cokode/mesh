@@ -65,7 +65,7 @@ const HomeScreen = () => {
 
   const Empty = () => (
     <View>
-      <Text>Loading...</Text>
+      <Text>Loading... wait</Text>
     </View>
   );
 
