@@ -17,6 +17,7 @@ const Card = ({ image, style, item }) => {
     FoundStatus,
     priorityStatus,
     tagNumber,
+    ownerInfo,
   } = item;
 
   const {detailsWrapper, imageMemeStyle, imgeStyle, commenetStyle } = style;
@@ -31,7 +32,7 @@ const Card = ({ image, style, item }) => {
 
         <Pressable style={detailsWrapper}>
           <Image style={imageMemeStyle} source={require("../../assets/myIMGs/depo.jpg")}/>
-          <Text style={{fontWeight: 500, marginBottom: 10}}> Fred Anderson</Text>
+          <Text style={{fontWeight: 500, marginBottom: 10}}>{ownerInfo.firstName} {ownerInfo.lastName}</Text>
         </Pressable>
 
         <View style={detailsWrapper}>

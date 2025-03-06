@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { api, ApiUrl } from "../urls/Api";
+import { api, ApiUrl, fetchProtectedData } from "../urls/Api";
 import { AUTH_TOKEN } from "@env";
 
 
@@ -13,10 +13,17 @@ const useFetchStashes = () => {
     try {
       setLoading(true);
 
+      // Extracting token from Asycronous Store
+      const token = await fetchProtectedData();
+      if (!token) {
+        console.log("Missing information in useFectData");
+        return;
+      }
+
       const response = await api.get(ApiUrl.getItems, {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
-          "Authorization": AUTH_TOKEN
+          "Authorization": token,
         },
         withCredentials: true,
       });

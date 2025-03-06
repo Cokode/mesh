@@ -19,15 +19,11 @@ const RegisterStashSrn = () => {
 
 
   const handleSubmit = (form) => { 
-
-    // ValidSRN             check product doesn't exit already.
-
-  
-    setTimeout(() => setShow(!show), 1000)
+    setTimeout(() => setShow(!show), 1000);
     setFormData(form);
+    
     setTimeout(() => uploadForm, 2000);
     console.log([loading, data, errorMessage]);
-
   }
 
   const bottomPadding = height => {

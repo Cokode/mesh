@@ -7,8 +7,6 @@ import useFetchStashes from "../hooks/useFetchData";
 import ReportChoice from "../components/reportChoice";
 import ReportComp from "../components/reportComp";
 import LostView from "../components/lostView";
-import { StatusBar } from "expo-status-bar";
-
 
 const ReportScreen = () => {
 
@@ -41,15 +39,17 @@ const ReportScreen = () => {
     );
   };
 
+    // Fectching stashes on every screen refresh.
   const onRefresh = () => {
     setRefreshing(true);
     fetchStashes();
+
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   };
 
-
+  // Fectching stashes on every load / mount.
   useEffect(() => {
     fetchStashes();
   },[]);
@@ -57,7 +57,6 @@ const ReportScreen = () => {
   const handleReport = ( ) => {
     
   }
-
 
   return (
     <KeyboardAvoiding>
@@ -102,7 +101,6 @@ const ReportScreen = () => {
     </KeyboardAvoiding>
   );
 };
-
 
 const styles = StyleSheet.create({
   divider: {

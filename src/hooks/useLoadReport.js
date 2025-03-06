@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api, ApiUrl } from "../urls/Api";
+import { api, ApiUrl, fetchProtectedData } from "../urls/Api";
 import { AUTH_TOKEN } from "@env";
 
 
@@ -10,8 +10,11 @@ const useLoadReport = () => {
   const handleSubmit = async (comment, id) => {
     setLoading(true);
 
-    if (!comment || !id) {
-      setErrorMessage("Comment is required.");
+    // Extracting token from Asycronous Store
+    const token = await fetchProtectedData();
+
+    if (!comment || !id || !token) {
+      setErrorMessage("Some information are missing. please check useLoadReport.");
       setLoading(false);
       return;
     }
@@ -23,7 +26,7 @@ const useLoadReport = () => {
         {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: AUTH_TOKEN,
+            Authorization: token,
           },
           withCredentials: true,
         }

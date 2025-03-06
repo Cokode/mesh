@@ -11,7 +11,7 @@ import { Pressable, StyleSheet, View, Text } from 'react-native';
 const duration = 2000;
 const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
 
-export default function ImageLoading( {display}) {
+export default function ImageLoading( { display }) {
   const sv = useSharedValue(0);
 
   React.useEffect(() => {
@@ -26,8 +26,8 @@ export default function ImageLoading( {display}) {
   return (
     <View style={styles.container}>
       <Pressable onPress={display}>
-      <Animated.View style={[styles.box, animatedStyle]} />
-      <Text style ={{marginTop: 30, }}>Loading ...</Text>
+        <Animated.View style={[styles.box, animatedStyle]} />
+        <Text style ={{marginTop: 30, }}>Loading ...</Text>
       </Pressable>
     </View>
   );

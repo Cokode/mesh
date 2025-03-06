@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { ApiUrl, api } from "../urls/Api";
+import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
 import { AUTH_TOKEN } from "@env";
 
 const useStashUpload = (form) => {
@@ -12,7 +11,14 @@ const useStashUpload = (form) => {
 
 
   const uploadForm = async () => {
-    if (!form) return;
+
+    // Extracting token from Asycronous Store
+    const token = await fetchProtectedData();
+
+    if (!form || !token) {
+      console.log("Missing information in useStashUpload", this.class.name);
+      return;
+    }
   
     try {
       const response = await api.post(ApiUrl.registerItem,
@@ -21,19 +27,19 @@ const useStashUpload = (form) => {
           headers: { 
             // "Content-Type": "multipart/form-data" 
             "Content-Type": "application/json; charset=utf-8", 
-            "Authorization": AUTH_TOKEN,
+            "Authorization": token,
           }, 
         }
       );
   
-      if (response) {
-        setData(response.data.message);
+      if (response.status) {
+        setData(response.data);
         setErrorMessage("");
       } else {
         setErrorMessage("Image upload failed.");
       }
     } catch (error) {
-      setErrorMessage(`Upload failed: ${error.response?.data?.error?.message || error.message}`);
+      setErrorMessage(`Upload failed: ${error.message}`);
     } finally {
       setLoading(false);
     }

@@ -33,7 +33,7 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
     if (!results || results.canceled) return;
   
     let newImages = results.assets.map(asset => ({ ...asset}));
-    base64Data = newImages[0].base64;
+    base64Data = newImages[0].base64; // can be rmeoved.
 
     if (isEmptySet) {
       newImages.push(myStash);
@@ -41,12 +41,15 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
       imageData.forEach(e => newImages.push(e));
     }
 
+    newImages.forEach(e => console.log(e.fileSize)); // To be removed
+
     setImageData(newImages);
     console.log("ending line..........");
   };
 
   const preSubmit = () => {
     if (imageData.length < 1) return;
+
     console.log("Length ImageData: " + imageData.length);
     console.log("Length ImageData: " + imageData.uri);
        
@@ -55,8 +58,11 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
 
     let copyImage = imageData.filter((e) => e.uri !== "uploader");
     
-    let copy = {...form, pictures: [...copyImage]};
-    console.log("Pictures: "+ copy.pictures.length)
+     
+    let copy = {...form};
+    copy.pictures = [...copyImage];
+    // let copy = {...form, pictures: [...copyImage]};
+    console.log("Pictures: "+ copy.pictures.length);
 
     submitAction(copy);
   };
@@ -70,11 +76,10 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
     <View>
       {/* Profile Picture */}
       <View style={styles.imageContainer}>
-        {
-          <Image  style={styles.image} 
-            source={{ uri: `data:image/png;base64,${base64Data}`}} /> 
-        }
-        <Text style={styles.imageText}>Your name</Text>
+        {/* <Image  style={styles.image} 
+            source={{ uri: `data:image/png;base64,${base64Data}`}} 
+        />  */}
+        <Text style={styles.imageText}>Upload Image</Text>
       </View>
 
       {/* Image Upload Section */}
@@ -162,7 +167,6 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
   );
 
 };
-
 
 const InputSection = ({ label, value, onChangeText, ...props }) => (
   <View style={styles.inputGroup}>

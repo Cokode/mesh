@@ -64,7 +64,7 @@ const LoginField = ({ onSubmit }) => {
         titleStyle={styles.titleStyle}  // For the text inside the button
         onPress={()=> {
           setErrMessage({...errMessage, default: errMessage['email']}); // ONLY set if login failed
-          onSubmit(login)
+          onSubmit(login);
         }}
         disabled={login['password'] && login['email']? false: true}
         disabledStyle={{backgroundColor: '#A6AEBF'}} 

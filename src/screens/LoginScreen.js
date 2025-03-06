@@ -4,7 +4,8 @@ import KeyboardAvoiding from "../components/keyBoardAvoidingView";
 import LoginField from "../components/loginField";
 import Spacer from "../components/spacer";
 import { useNavigation } from "@react-navigation/native";
-import { ApiUrl, api } from "../urls/Api";
+import { ApiUrl, api, storeToken } from "../urls/Api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -17,11 +18,17 @@ const LoginScreen = () => {
         },
         withCredentials: true,
       });
-
+    
       if (response.status) {
-        console.log(response.data)
+
+        const token = response.data.token;
+        storeToken(token);
+
+        console.log(response.data);
+        // console.log(response.data.token);
        navigation.navigate('MainScreens')
       } else {
+        console.log("can't log you in at this time.");
       }
     
     } catch (error) {
