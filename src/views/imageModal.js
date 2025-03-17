@@ -14,7 +14,8 @@ const ImageModal = ({ image, showPicture, setShowPicture }) => {
       <View style={styles.imgeWrapper}>
         <Image
           style={{ height: '100%', width: '100%' }}
-          source={{ uri: `data:image/png;base64,${image.base64}` }}
+          //source={{ uri: `data:image/png;base64,${image.base64}` }}
+          source={{ uri: image.pictureUrls }}
           resizeMode="contain"
           alt="image"
         />

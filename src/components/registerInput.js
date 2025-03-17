@@ -20,6 +20,8 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
   const [ imageData, setImageData ] = useState([]);
   const [ lockSubmit, setLockSubmit ] = useState(false);
 
+  // Handles Upload of stash images
+  // maximum picture upload size is 5
   const imageUpdater = async () => {
     const isEmptySet = imageData.length <= 0;
     const maxImages = 6;
@@ -47,24 +49,27 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
     console.log("ending line..........");
   };
 
+  // Sends new stash details to server
+  // Ensure registered stash has at least 
+  // one picture, else stash is not saved.
   const preSubmit = () => {
     if (imageData.length < 1) return;
 
     console.log("Length ImageData: " + imageData.length);
     console.log("Length ImageData: " + imageData.uri);
        
-    setLockSubmit(lockSubmit);
-   // imageData.forEach(e => e.base64 = "");
+    setLockSubmit(!lockSubmit); // Locks submit button during upload.
 
     let copyImage = imageData.filter((e) => e.uri !== "uploader");
-    
      
     let copy = {...form};
     copy.pictures = [...copyImage];
     // let copy = {...form, pictures: [...copyImage]};
     console.log("Pictures: "+ copy.pictures.length);
 
-    submitAction(copy);
+    setLockSubmit(false);
+    submitAction(copy); // hook prop. sends data to server.
+    
   };
 
   const handleDelete = (item) => {

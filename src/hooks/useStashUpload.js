@@ -1,14 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
-import { AUTH_TOKEN } from "@env";
 
 const useStashUpload = (form) => {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] =  useState("");
-
 
   const uploadForm = async () => {
 
@@ -34,12 +32,16 @@ const useStashUpload = (form) => {
   
       if (response.status) {
         setData(response.data);
+        console.log("response.Status: ", response.status, " Response.Data: ", response.data)
         setErrorMessage("");
       } else {
         setErrorMessage("Image upload failed.");
       }
+
     } catch (error) {
-      setErrorMessage(`Upload failed: ${error.message}`);
+      console.log("Data1: ", data, "Error: ", error);
+      setData(null);
+      setErrorMessage(`Upload failed: ${ error}`);
     } finally {
       setLoading(false);
     }

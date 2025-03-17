@@ -7,7 +7,7 @@ import ViewShot from 'react-native-view-shot';
 import Feather from '@expo/vector-icons/Feather';
 import captureAndSaveQRCode from './lib/viewShot';
 
-const QRCodeGenerator = ({url, closeModal}) => {
+const QRCodeGenerator = ({ url, closeModal, barcode }) => {
   const viewShotRef = useRef();
 
   return (
@@ -38,7 +38,7 @@ const QRCodeGenerator = ({url, closeModal}) => {
           />
           <Text 
             style={{
-                fontSize: 10, 
+                fontSize: 12, 
                 backgroundColor: 'white',
                 borderRadius: 20, 
                 padding: 5,
@@ -46,6 +46,17 @@ const QRCodeGenerator = ({url, closeModal}) => {
               }
             
             }>if i'm lost please scan me to reach owner</Text>
+            <Text 
+              style={{
+                fontSize: 20, 
+                backgroundColor: 'white',
+                borderRadius: 20, 
+                padding: 5,
+                alignSelf: 'center',
+                fontWeight: 600
+              }
+            
+            }>{ barcode? barcode : "" }</Text>
         </View>
     </ViewShot>
     <Spacer />
@@ -57,11 +68,21 @@ const QRCodeGenerator = ({url, closeModal}) => {
           alignItems: 'space-between',
           flex: 1,
           width: "100%",
-          marginBottom: 30
+          marginBottom: 50
         }
       }>
-    <Feather name="share" size={54} color="rgb(100, 100, 100)" onPress={() => captureAndSaveQRCode({viewShotRef})} />
-    <AntDesign name="closecircleo" size={54} color="rgb(100, 100, 100)" onPress={closeModal} />
+
+        <View style={{flexDirection: "column", justifyContent: "center", }}>
+          <Feather name="share" size={54} color="#000000" onPress={() => captureAndSaveQRCode({viewShotRef})} />
+            <Text style={{color: "black",  fontSize: 16, textAlign: "center", padding: 4}}>Save</Text>
+        </View>
+
+        <View>
+        <AntDesign name="closecircleo" size={53} color="#000000" onPress={closeModal} />
+        <Text style={{color: "black",  fontSize: 16, textAlign: "center", padding: 4}}>Close</Text>
+        </View>
+    
+    
     </View>   
     </View>
   );
@@ -72,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(10, 37, 77, 0.98)',
+    backgroundColor: "white",
     padding: 20
   },
   title: {

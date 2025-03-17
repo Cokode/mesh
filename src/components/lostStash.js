@@ -32,7 +32,7 @@ const LostStash = (props) => {
             <Pressable onPress={() => showFullImage(item)}>
               <Image
                 style={styles.imageStyle}
-                source={{ uri: `data:image/png;base64,${item.base64}` }}
+                source={{ uri: item.pictureUrls }}
                 alt="image"
               />
             </Pressable> )}

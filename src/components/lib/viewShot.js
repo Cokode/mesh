@@ -3,7 +3,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
 
-const captureAndSaveQRCode = async ({viewShotRef}) => {
+const captureAndSaveQRCode = async ({ viewShotRef }) => {
     try {
       const uri = await viewShotRef.current.capture();
       console.log('Captured URI:', uri);

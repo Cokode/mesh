@@ -4,7 +4,7 @@ import Spacer from './spacer';
 
 export default function wrapper ({ onpress }) {
   const [inputValue, SetinputValue] = useState("");
-  const placeholder = "...";
+  const placeholder = "Enter barcode number ...";
 
   const updateInput = (value) => {
     SetinputValue(value);
@@ -19,7 +19,7 @@ export default function wrapper ({ onpress }) {
 
     return (
       <View style={styles.wrapper} >
-        <Text style={styles.inputLabel}>Enter full barcode number found on product</Text>
+        <Text style={styles.inputLabel}>Enter barcode number found on product</Text>
         <Spacer />
 
         <TextInput 
@@ -42,7 +42,7 @@ export default function wrapper ({ onpress }) {
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
+   wrapper: {
     display:"flex",
     width: "100%", // Adjust width as needed
     borderWidth: 0.3,
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 10,
     color: '#000',
-    fontWeight: "400",
-    marginBottom: 5,
+    fontWeight: "600",
+    marginBottom: 1,
   },
   input: {
     width: '100%',

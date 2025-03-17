@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, StatusBar, Modal, ScrollView, Text } from "react-native";
 import { Input, Button } from "@rneui/themed";
 import KeyboardAvoiding from "../components/keyBoardAvoidingView";
@@ -13,25 +13,44 @@ import { AUTH_TOKEN } from "@env";
 const RegisterStashSrn = () => {
   const [padding, setPadding] = useState(0);
   const [show, setShow] = useState(false);
-  const [formData, setFormData] = useState(null)
+  const [showModal, setShowModal] = useState(show);
+  const [formData, setFormData] = useState(null);
+  const [barcode, setBarcode] = useState(null);
 
   const {uploadForm, errorMessage, loading, data} = useStashUpload(formData)
 
-
-  const handleSubmit = (form) => { 
-    setTimeout(() => setShow(!show), 1000);
+  const handleSubmit = async (form) => { 
+    console.log("HandleSubmit called.");
+    if (!form) return;
+    setShow(!show);
     setFormData(form);
     
-    setTimeout(() => uploadForm, 2000);
-    console.log([loading, data, errorMessage]);
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
   }
+  useEffect(() => {
+    if (!data) {
+      setShow(false);
+      return;
+    }
+  
+    setShow(false);
+  
+    const timer = setTimeout(() => {
+      setShowModal(true);
+    }, 400);
+  
+    setBarcode(data?.barCodeNum ?? ""); // Ensure safe access to data
+  
+    return () => clearTimeout(timer); // Cleanup timeout to prevent memory leaks
+  }, [data]);
+  
 
   const bottomPadding = height => {
     setPadding(height);
-  }
+  };
 
   const hideModal = () => {
-    setShow(!show); 
+    setShowModal(!showModal); 
   };
 
   const dataToStore = "https://www.instagram.com/lordofnordic/"; // Replace with your data
@@ -41,12 +60,12 @@ const RegisterStashSrn = () => {
 
       <ScrollView style={styles.scrollView} >
         <RegisterInput bottomPad = {bottomPadding} showModal={hideModal} submitAction={handleSubmit}/>
-          <Modal animationType="slide" transparent={true} visible={false} >
-            <QRCodeGenerator url= {dataToStore} closeModal={hideModal} />
+          <Modal animationType="slide" transparent={true} visible={showModal} >
+            <QRCodeGenerator url= {dataToStore} closeModal={hideModal} barcode={barcode}/>
           </Modal>
 
           <Modal animationType="slide" transparent={false} visible={show} >
-            <ImageLoading display={hideModal} />
+            <ImageLoading display={()=> setShow(false)} />
           </Modal>
         <StatusBar barStyle={'default'} showHideTransition={'slide'} translucent />
       {/* <View style={{ backgroundColor: 'orange', height: padding, marginTop: 20 }}>Hello </View> */}
@@ -55,7 +74,6 @@ const RegisterStashSrn = () => {
     </KeyboardAvoiding>
   );
 }
-
 
 const styles = StyleSheet.create({
   scrollView: {

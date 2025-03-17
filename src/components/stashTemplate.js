@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from "react
 const StashTemplate = ({ value, onpress }) => {
   const { itemName, timeAdded, sp_Number, dateAdded, itemDesc, pictures } = value;
   const base64 = pictures.length > 0 ? pictures[0].base64 : '';
+  const pictureUrl = pictures.length > 0 ? pictures[0].pictureUrls : '';
 
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.8} onPress={onpress}>
@@ -18,9 +19,10 @@ const StashTemplate = ({ value, onpress }) => {
         {base64 ? (
           <Image style={styles.image} source={{ uri: `data:image/png;base64,${base64}` }} />
         ) : (
-          <Text>No Image</Text>
+          <Image style={styles.image} source={{uri: pictureUrl}} />
         )}
       </View>
+
     </TouchableOpacity>
   );
 };

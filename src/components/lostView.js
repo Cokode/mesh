@@ -93,8 +93,8 @@ const LostView = ({ item, handleReport }) => {
 
   const FullImage = (value) => {
     console.log(value.assetId)
-    console.log(image._id + " Image ID")
-    setImage(value);
+    console.log(value._id + " Image ID")
+    setImage(value.pictureUrls);
     setShowPicture(!showPicture);
   }
 
@@ -164,7 +164,8 @@ const LostView = ({ item, handleReport }) => {
              <Pressable onPress={() => FullImage(item)}>
                <Image
                 style={styles.imageStyle}
-                source={{ uri: `data:image/png;base64,${item.base64}` }}
+                // source={{ uri: `data:image/png;base64,${item.base64}` }}
+                source={{ uri: item.pictureUrls}}
                 alt="image"
               />
              </Pressable>
@@ -185,7 +186,8 @@ const LostView = ({ item, handleReport }) => {
            <View onPress={() => setShowPicture(false)} style={{flex: 1, padding: 10, backgroundColor: "black", justifyContent: "center"}}>
               <Image
                 style={{height: '100%', width: '100%'}}
-                source={{ uri: `data:image/png;base64,${image.base64}`}}
+                // source={{ uri: `data:image/png;base64,${image.base64}`}}
+                source={{ uri: image }}
                 resizeMode="contain"
                 alt="image"
               />

@@ -15,7 +15,7 @@ export default function CheerScreen ({ owner, itemName, styles }) {
 
       <View>
         <Pressable>
-          <Text>Send a Found Message</Text>
+          <Text>Send retrieval notification</Text>
         </Pressable>
       </View>
     </View>
