@@ -14,7 +14,7 @@ import Animated, {
 
 let screenHeight = Dimensions.get("screen").height;
 
-export default function ModalView ({ children, visible, onClose }) {
+export default function ModalView ({ children, visible, valid, item, onClose }) {
 
   const [show, setShow] = useState(visible);
 
@@ -94,7 +94,7 @@ export default function ModalView ({ children, visible, onClose }) {
         <View style={styles.gestureContainer}>
           <Animated.View style={animatedStyle}>
             <View>
-            {React.cloneElement(children, { closeModal: hideModal })}
+            {React.cloneElement(children, { closeModal: hideModal, data: valid, item: item })}
             </View>
           </Animated.View>
         </View>

@@ -13,7 +13,7 @@ export default function wrapper ({ onpress }) {
   const onSubmit = () => {
     // SetinputValue(""); // set inpput value to default
 
-    console.log("Hello, Pressed.")
+    console.log("Hello, Pressed.");
     onpress(inputValue);
   };
 
@@ -50,7 +50,13 @@ const styles = StyleSheet.create({
     borderColor: "black",
     paddingHorizontal: 20,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow effect
   },
   inputLabel: {
     fontSize: 14,
