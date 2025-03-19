@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, StyleSheet, Platform, ScrollView, Button, KeyboardAvoidingView, TouchableOpacity, Pressable, Alert } from 'react-native';
+import { View, Text, TextInput, Image, Keyboard, StyleSheet, Pressable, Alert } from 'react-native';
 import Spacer from './spacer';
 
 export default function wrapper ({ onpress }) {
-  const [inputValue, SetinputValue] = useState("");
+  const [inputValue, SetInputValue] = useState("");
   const placeholder = "Enter barcode number ...";
 
   const updateInput = (value) => {
-    SetinputValue(value);
+    if (value.length < inputValue.length || inputValue.length < 10) {
+      // Allow backspace or deleting characters
+      SetInputValue(value);
+    }
   };
 
+  //calls onpress to verify barcode match,
   const onSubmit = () => {
-    // SetinputValue(""); // set inpput value to default
+    SetInputValue(""); // set inpput value to default
 
-    console.log("Hello, Pressed.");
+    console.log("Hello, Pressed.", inputValue);
     onpress(inputValue);
   };
+
+
 
     return (
       <View style={styles.wrapper} >
