@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Pressable, Button } from 'react-native';
 
 // Re-usable component, offers a founder option 
 // to contact owner of a lost item
-export default function CheerScreen ({ item, itemName, styles }) {
+export default function CheerScreen ({ item, itemName, styles, onClick }) {
   const { ownerInfo } = item;
 
   return (
@@ -20,7 +20,7 @@ export default function CheerScreen ({ item, itemName, styles }) {
       <Spacer />
       <Spacer />
       <View style={[stylesInner.btnWrapper]}>
-        <Pressable>
+        <Pressable onPress={() => (onClick)} >
           <Text style={stylesInner.btnText}>Tell { ownerInfo.firstName } about it</Text>
         </Pressable>
       </View>

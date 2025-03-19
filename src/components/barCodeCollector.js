@@ -15,13 +15,11 @@ export default function wrapper ({ onpress }) {
 
   //calls onpress to verify barcode match,
   const onSubmit = () => {
-    SetInputValue(""); // set inpput value to default
+    // SetInputValue(""); // set inpput value to default
 
     console.log("Hello, Pressed.", inputValue);
     onpress(inputValue);
   };
-
-
 
     return (
       <View style={styles.wrapper} >
@@ -74,7 +72,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 85,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,

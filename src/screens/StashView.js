@@ -41,6 +41,10 @@ const StashView = ({ route }) => {
   );
 };
 
+  const handleSubmit = (value) => {
+    // code goes here.
+  }
+
 const ChildComponent = ({ closeModal, data, item }) => (
   <View style={{ width: "100%", height: "100%",  backgroundColor: "#f5f5f5", paddingTop: 50 }}>
     <Spacer />
@@ -50,7 +54,7 @@ const ChildComponent = ({ closeModal, data, item }) => (
     { data ? 
     
       (
-        <CheerScreen item={ item } styles={styles} />
+        <CheerScreen item={ item } styles={styles}  onClick={handleSubmit}/>
       ) : 
 
       <View style={styles.validStyle}>

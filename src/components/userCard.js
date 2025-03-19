@@ -1,17 +1,18 @@
-import React, {useState} from "react";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, Pressable, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 const Card = ({ image, style, item }) => {
-
   const [expand, setExpand] = useState(false);
 
-
-  const {rewardEligibility,
+  const {
+    rewardEligibility,
     dateAdded,
-    itemName, 
-    sp_Number, 
+    itemName,
+    sp_Number,
     ifOthers,
-    lost_comment, 
+    lost_comment,
     itemDesc,
     LostStatus,
     FoundStatus,
@@ -20,50 +21,111 @@ const Card = ({ image, style, item }) => {
     ownerInfo,
   } = item;
 
-  const {detailsWrapper, imageMemeStyle, imgeStyle, commenetStyle } = style;
-
   return (
+    <Pressable style={styles.container} onPress={() => setExpand(!expand)}>
+      {/* Profile Section */}
+      <View style={styles.profileContainer}>
+        <Image style={styles.profileImage} source={require("../../assets/myIMGs/depo.jpg")} />
+        <Text style={styles.ownerText}>
+          {ownerInfo.firstName} {ownerInfo.lastName}
+        </Text>
+      </View>
 
-    <>
-      <Pressable
-        style={styles.container}
-        activeOpacity={0.6}
-        >
+      {/* Tag Number & Priority Section */}
+      <View style={styles.tagContainer}>
+        <Image style={styles.tagIcon} source={require("../../assets/myIMGs/tagNmber.png")} />
+        <Text style={styles.tagText}>{sp_Number}</Text>
+        <Text style={styles.priorityText}>Priority Status</Text>
+        <Image style={styles.priorityIcon} source={require("../../assets/myIMGs/priority_high.png")} />
+      </View>
 
-        <Pressable style={detailsWrapper}>
-          <Image style={imageMemeStyle} source={require("../../assets/myIMGs/depo.jpg")}/>
-          <Text style={{fontWeight: 500, marginBottom: 10}}>{ownerInfo.firstName} {ownerInfo.lastName}</Text>
-        </Pressable>
-
-        <View style={detailsWrapper}>
-          <Image style={imgeStyle} source={require("../../assets/myIMGs/tagNmber.png")}/>
-          <Text>{ sp_Number }</Text>
-
-          <Text> Priority Status</Text>
-          <Image style={[imgeStyle, {color: "red"}]} source={require("../../assets/myIMGs/priority_high.png")}/>
+      {/* Expandable Comment Section */}
+      {expand ? (
+        <View style={styles.commentExpanded}>
+          <Text style={styles.commentText}>{lost_comment}</Text>
         </View>
-
-        { expand ? 
-          (
-            <View style={commenetStyle} onPress={setExpand(true)} >
-              <Text>{ lost_comment }</Text>
-            </View>
-          )
-          :
-          (
-            <View style={commenetStyle}>
-              <Text>{ lost_comment }</Text>
-            </View>
-          ) 
-        }
-          
-      </Pressable>
-    </>
+      ) : (
+        <Pressable onPress={() => setExpand(true)} style={styles.commentCollapsed}>
+          <Text style={styles.commentText} numberOfLines={2}>
+            {lost_comment}
+          </Text>
+        </Pressable>
+      )}
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 10, borderRadius: 10, borderBlockColor: "#CECECE", borderWidth: 1, marginTop: 5},
+  container: {
+    padding: 12,
+    borderRadius: 10,
+    borderColor: "#CECECE",
+    borderWidth: 1,
+    backgroundColor: "#fff",
+    marginTop: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    elevation: 3,
+  },
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  ownerText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  tagContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  tagIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  tagText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#555",
+  },
+  priorityText: {
+    fontSize: 14,
+    color: "red",
+    fontWeight: "bold",
+    marginLeft: "auto",
+  },
+  priorityIcon: {
+    width: 20,
+    height: 20,
+    tintColor: "red",
+    marginLeft: 5,
+  },
+  commentCollapsed: {
+    padding: 10,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 5,
+  },
+  commentExpanded: {
+    padding: 10,
+    backgroundColor: "#e0f7fa",
+    borderRadius: 5,
+  },
+  commentText: {
+    fontSize: 14,
+    color: "#444",
+  },
 });
 
 export default Card;

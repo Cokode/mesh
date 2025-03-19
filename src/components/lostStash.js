@@ -1,129 +1,108 @@
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Pressable } from "react-native";
-import { stashProp } from "../urls/stashObject";
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Pressable, Dimensions } from "react-native";
 import ImageModal from "../views/imageModal";
 import Card from "./userCard";
+
+const { width } = Dimensions.get("window");
+const IMAGE_WIDTH = width * 0.9; // 90% of screen width for better responsiveness
+const IMAGE_HEIGHT = IMAGE_WIDTH * 0.6; // Maintain aspect ratio
 
 const LostStash = (props) => {
   const navigation = useNavigation();
   const [image, setImage] = useState("");
   const [showPicture, setShowPicture] = useState(false);
 
-  const { pictures, item  } = props;
+  const { pictures, item } = props;
 
   const showFullImage = (value) => {
-    console.log(value.assetId);
-    console.log(value._id + " Image ID");
     setImage(value);
     setShowPicture(true);
   };
 
   return (
-    <>
-      <Card item={item} style={styles} image={image}/>
+    <View style={styles.container}>
+      <Card item={item} style={styles} image={image} />
       <FlatList
         style={styles.imageWrapper}
-          data={pictures}
-          horizontal
-          showsHorizontalScrollIndicator={true}
-          keyExtractor={(item, index) => `item-${index}-${item.assetId || 'fallback'}`}
-          renderItem={({ item }) => (
-            <Pressable onPress={() => showFullImage(item)}>
-              <Image
-                style={styles.imageStyle}
-                source={{ uri: item.pictureUrls }}
-                alt="image"
-              />
-            </Pressable> )}
+        data={pictures}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => `item-${index}-${item.assetId || 'fallback'}`}
+        renderItem={({ item }) => (
+          <Pressable onPress={() => showFullImage(item)}>
+            <Image style={styles.imageStyle} source={{ uri: item.pictureUrls }} />
+          </Pressable>
+        )}
       />
 
-      <View style={styles.pressAreaWrapper}>
-        <Pressable  onPress={() => navigation.navigate('View', { stash: item })} style={({ pressed }) => (pressed ? styles.highlight : styles.pressable)} >
-          <Image style={styles.infoStyle} source={require("../../assets/myIMGs/pan_tool.png")}/>
-          <Text style={styles.labelStyle}>I Found it</Text>
+      <View style={styles.buttonContainer}>
+        <Pressable
+          onPress={() => navigation.navigate('View', { stash: item })}
+          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        >
+          <Image style={styles.infoIcon} source={require("../../assets/myIMGs/pan_tool.png")} />
+          <Text style={styles.buttonText}>I Found it</Text>
         </Pressable>
+      </View>
 
-      </View> 
-
-      <ImageModal
-        image={image}
-        showPicture={showPicture}
-        setShowPicture={() => setShowPicture(false)}
-      />
-    </>
+      <ImageModal image={image} showPicture={showPicture} setShowPicture={() => setShowPicture(false)} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  pressAreaWrapper: {
-    borderBlockColor: '#CECECE',
-    borderWidth: 1,
+  container: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+    padding: 15,
   },
-  commenetExpandStyle: {
-    display: "flex",
-    width: "100%",
-    borderBlockColor: '#CECECE',
-    borderWidth: 1
-  },
-  commenetStyle: {
-   display: "flex",
-    width: "100%",
-    height:"auto",
-    backgroundColor: "white",
-    borderBlockColor: '#CECECE',
-    borderWidth: 1
-  },
-  labelStyle: {
-    fontSize: 15,
+  card: {
+    marginBottom: 15,
+    borderRadius: 10,
+    elevation: 3,
   },
   imageWrapper: {
-    backgroundColor: "#f5f5f5", 
-    paddingVertical: 10
+    backgroundColor: "#ffffff",
+    paddingVertical: 10,
+    borderRadius: 10,
   },
   imageStyle: {
-    width: 365,
-    height: 250,
-    // borderRadius: 10,
-    marginRight: 1.5,
-    marginBottom: 1.5,
-    shadowColor: 'rgb(0, 0, 0)',
-    shadowsideY: {
-      width: 4,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    elevation: 5,
+    width: IMAGE_WIDTH,
+    height: IMAGE_HEIGHT,
+    borderRadius: 10,
+    marginRight: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    elevation: 3,
   },
-  infoStyle: {
-    height: 25,
-    width: 25,
-    paddingRight: 5
-  },
-  highlight: {
-    flexDirection: "row",
-    justifyContent: "center",
+  buttonContainer: {
     alignItems: "center",
-    backgroundColor: "grey",
-    opacity: 0.4,
-    padding: 5
+    marginTop: 15,
   },
-  pressable: {
+  button: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
-    width: "100%",
-    padding: 5
+    backgroundColor: "#007bff",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    elevation: 2,
   },
-  imgeStyle: {
-    width: 15, 
-    height: 10,
-    color: '#CECECE'
+  buttonPressed: {
+    opacity: 0.6,
   },
-  detailsWrapper: {display: "flex", flexDirection: "row", alignItems: "center"},
-  imageMemeStyle: {width: 30, height: 30 , borderRadius: 20}
-})
-
+  infoIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+});
 
 export default LostStash;
