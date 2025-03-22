@@ -12,6 +12,7 @@ const BoardScreen = () => {
     stashesRetrieved: 15,
     bonusPoints: 200,
     pointsUsed: 120,
+    lostStashes: 23
   };
 
   return (
@@ -28,6 +29,7 @@ const BoardScreen = () => {
         <Text style={styles.statText}>Discovered Stashes: {user.stashesDiscovered}</Text>
         <Text style={styles.statText}>Retrieved Stashes: {user.stashesRetrieved}</Text>
         <Text style={styles.statText}>Found Stashes: {user.stashesRecovered}</Text>
+        <Text style={styles.statText}>lost Stashes: {user.lostStashes}</Text>
       </View>
 
       {/* Points Section */}
