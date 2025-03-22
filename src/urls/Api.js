@@ -10,7 +10,8 @@ const ApiUrl = {
   SRNcheck: "api/serialNumberCheck",
   getItems: "getItems",
   loadReport: "loadReport",
-  getReport: "getReport"
+  getReport: "getReport",
+  getUser: "getUser",
 };
 
 const api = axios.create({

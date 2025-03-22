@@ -1,48 +1,96 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
+import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const BoardScreen = () => {
-  // Sample data (replace with actual data from API or state)
-  const user = {
+  const [user, setUser] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); // State for refresh control
+
+  const demoUser = {
     fullName: "John Doe",
-    profilePicture: "https://via.placeholder.com/100", // Replace with actual image URL
+    profilePicture: "https://via.placeholder.com/100",
     stashesRegistered: 50,
     stashesDiscovered: 30,
     stashesRecovered: 20,
     stashesRetrieved: 15,
     bonusPoints: 200,
     pointsUsed: 120,
-    lostStashes: 23
+    lostStashes: 23,
   };
 
+  async function getUserInfo() {
+    const token = await fetchProtectedData();
+
+    if (!token) {
+      console.log("Missing information in BoardScreen");
+      return;
+    }
+
+    setRefreshing(true); // Start refreshing AFTER 400ms delay
+
+    setTimeout(async () => {
+      try {
+    
+        const data = await api.get(ApiUrl.getUser, {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+    
+        console.log(data.data);
+        if (data.data) {
+          setUser(data.data);
+        } else {
+          console.log("No data found");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setRefreshing(false); // Stop refreshing after API call
+      }
+    }, 3000);
+  }
+
+  useEffect(() => { 
+    getUserInfo();
+    console.log("Fetching User Information.");
+  }, []);
+
   return (
-    <View style={styles.container}>
-      {/* Profile Section */}
-      <View style={styles.profileContainer}>
-        <Image source={{ uri: user.profilePicture }} style={styles.profileImage} />
-        <Text style={styles.fullName}>{user.fullName}</Text>
-      </View>
+    <GestureHandlerRootView>
+      <ScrollView
+        style={styles.container}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getUserInfo} />}
+      >
+        {/* Profile Section */}
+        <View style={styles.profileContainer}>
+          <Image source={{ uri: user?.body.profilePicture }} style={styles.profileImage} />
+          <Text style={styles.fullName}>{user?.body.user.firstName} {user?.body.user.lastName }</Text>
+        </View>
 
-      {/* Stats Section */}
-      <View style={styles.statsContainer}>
-        <Text style={styles.statText}>Registered Stashes: {user.stashesRegistered}</Text>
-        <Text style={styles.statText}>Discovered Stashes: {user.stashesDiscovered}</Text>
-        <Text style={styles.statText}>Retrieved Stashes: {user.stashesRetrieved}</Text>
-        <Text style={styles.statText}>Found Stashes: {user.stashesRecovered}</Text>
-        <Text style={styles.statText}>lost Stashes: {user.lostStashes}</Text>
-      </View>
+        {/* Stats Section */}
+        <View style={styles.statsContainer}>
+          <Text style={styles.statText}>Registered Stashes: {user?.body.reg_stash}</Text>
+          <Text style={styles.statText}>Found Stashes: {demoUser.stashesDiscovered}</Text>
+          <Text style={styles.statText}>Retrieved Stashes: {demoUser.stashesRetrieved}</Text>
+          <Text style={styles.statText}>Lost Stashes: {user?.body.lost_stash}</Text>
+        </View>
 
-      {/* Points Section */}
-      <View style={styles.pointsContainer}>
-        <Text style={styles.pointText}>Bonus Points: {user.bonusPoints}</Text>
-        <Text style={styles.pointText}>Points Used: {user.pointsUsed}</Text>
-      </View>
+        {/* Points Section */}
+        <View style={styles.pointsContainer}>
+          <Text style={styles.pointText}>Bonus Points: {demoUser.bonusPoints}</Text>
+          <Text style={styles.pointText}>Points Used: {demoUser.pointsUsed}</Text>
+        </View>
 
-      {/* Update Profile Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Update Profile Button */}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Update Profile</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </GestureHandlerRootView>
   );
 };
 
