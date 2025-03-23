@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Modal, SafeAreaView } from "react-native";
 import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ProfileEdit from "../components/profileEdit";
+import ImageModal from "../views/imageModal";
+import selectImage from "../components/lib/imagePicker";
 
 const BoardScreen = () => {
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false); // State for refresh control
+  const [showModal, setShowModal] = useState(false);
+  const [showPic, setShowPic] = useState(false);
 
   const demoUser = {
     fullName: "John Doe",
@@ -18,8 +23,47 @@ const BoardScreen = () => {
     pointsUsed: 120,
     lostStashes: 23,
   };
+  
+  const updateImage = async () => {
+    const results = await selectImage(1);
+    // results.assets[0].base64 = "";
 
-  async function getUserInfo() {
+    console.log(results.assets[0]);
+
+    // Extracting token from Asycronous Store
+      const token = await fetchProtectedData();
+
+      if (!token) {
+      console.log("Missing information in Board Screen.");
+      return;
+    }
+
+    try {
+
+      let imgData = results.assets[0].base64;
+
+      let response = await api.post(ApiUrl.updatePic, {"img":imgData}, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Authorization: token,
+        }
+      });
+
+      if (response.data) {
+        getUserInfo();
+        alert("Profile picture updated.");
+      } else {
+       alert("An error occured, try again!");
+      }
+    } catch (error ) {
+      console.log(error);
+    }
+
+   // base64Data = newImages[0].base64;
+
+  }
+
+  const getUserInfo = async () =>  {
     const token = await fetchProtectedData();
 
     if (!token) {
@@ -52,7 +96,7 @@ const BoardScreen = () => {
         setRefreshing(false); // Stop refreshing after API call
       }
     }, 3000);
-  }
+  };
 
   useEffect(() => { 
     getUserInfo();
@@ -66,10 +110,10 @@ const BoardScreen = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getUserInfo} />}
       >
         {/* Profile Section */}
-        <View style={styles.profileContainer}>
+        <TouchableOpacity onPress={() => setShowPic(true)} style={styles.profileContainer}>
           <Image source={{ uri: user?.body.profilePicture }} style={styles.profileImage} />
-          <Text style={styles.fullName}>{user?.body.user.firstName} {user?.body.user.lastName }</Text>
-        </View>
+          <Text style={styles.fullName}>{user?.body.user.firstName} {user?.body.user.lastName}</Text>
+        </TouchableOpacity>
 
         {/* Stats Section */}
         <View style={styles.statsContainer}>
@@ -86,9 +130,25 @@ const BoardScreen = () => {
         </View>
 
         {/* Update Profile Button */}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => setShowModal(true)}>
           <Text style={styles.buttonText}>Update Profile</Text>
         </TouchableOpacity>
+
+        <Modal
+          visible={showModal} 
+          animationType="slide">
+            <SafeAreaView style={styles.container}>
+            <ProfileEdit style={styles} onClose={() => setShowModal(false)} user={user?.body.user}/>
+            </SafeAreaView>
+        </Modal>
+
+        <ImageModal
+         image={{pictureUrls: user?.body.profilePicture}}  
+         showPicture={showPic} 
+         setShowPicture={() => setShowPic(false)} 
+         uploadImg={() => updateImage()}
+        />
+      
       </ScrollView>
     </GestureHandlerRootView>
   );

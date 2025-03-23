@@ -17,7 +17,7 @@ const RegisterStashSrn = () => {
   const [formData, setFormData] = useState(null);
   const [barcode, setBarcode] = useState(null);
 
-  const {uploadForm, errorMessage, loading, data} = useStashUpload(formData)
+  const {uploadForm, errorMessage, loading, data} = useStashUpload(formData);
 
   const handleSubmit = async (form) => { 
     console.log("HandleSubmit called.");

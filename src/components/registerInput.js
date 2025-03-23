@@ -69,7 +69,6 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
 
     setLockSubmit(false);
     submitAction(copy); // hook prop. sends data to server.
-    
   };
 
   const handleDelete = (item) => {
