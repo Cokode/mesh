@@ -23,12 +23,9 @@ const BoardScreen = () => {
     pointsUsed: 120,
     lostStashes: 23,
   };
-  
+
   const updateImage = async () => {
     const results = await selectImage(1);
-    // results.assets[0].base64 = "";
-
-    console.log(results.assets[0]);
 
     // Extracting token from Asycronous Store
       const token = await fetchProtectedData();
@@ -42,11 +39,12 @@ const BoardScreen = () => {
 
       let imgData = results.assets[0].base64;
 
-      let response = await api.post(ApiUrl.updatePic, {"img":imgData}, {
+      let response = await api.post(ApiUrl.updatePic, { "img": imgData }, {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
           Authorization: token,
-        }
+        },
+        withCredentials: true,
       });
 
       if (response.data) {
@@ -58,9 +56,6 @@ const BoardScreen = () => {
     } catch (error ) {
       console.log(error);
     }
-
-   // base64Data = newImages[0].base64;
-
   }
 
   const getUserInfo = async () =>  {
@@ -74,8 +69,8 @@ const BoardScreen = () => {
     setRefreshing(true); // Start refreshing AFTER 400ms delay
 
     setTimeout(async () => {
+
       try {
-    
         const data = await api.get(ApiUrl.getUser, {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
@@ -83,19 +78,20 @@ const BoardScreen = () => {
           },
           withCredentials: true,
         });
-    
-        console.log(data.data);
+
         if (data.data) {
           setUser(data.data);
         } else {
           console.log("No data found");
         }
+
       } catch (error) {
         console.log(error);
       } finally {
         setRefreshing(false); // Stop refreshing after API call
       }
-    }, 3000);
+
+    }, 400);
   };
 
   useEffect(() => { 

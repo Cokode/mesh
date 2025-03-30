@@ -69,7 +69,7 @@ function MainScreens() {
         },
         tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'gray',
-        headerTintColor: "#fff"
+        // headerTintColor: "#fff"
       }}
     >
       <Tab.Screen

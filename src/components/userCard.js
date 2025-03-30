@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, Pressable, Dimensions } from "react-nati
 
 const { width } = Dimensions.get("window");
 
-const Card = ({ image, style, item }) => {
+const Card = ({ style, item }) => {
   const [expand, setExpand] = useState(false);
 
   const {
@@ -16,7 +16,7 @@ const Card = ({ image, style, item }) => {
     itemDesc,
     LostStatus,
     FoundStatus,
-    priorityStatus,
+    priorityStatus, 
     tagNumber,
     ownerInfo,
   } = item;
@@ -25,7 +25,7 @@ const Card = ({ image, style, item }) => {
     <Pressable style={styles.container} onPress={() => setExpand(!expand)}>
       {/* Profile Section */}
       <View style={styles.profileContainer}>
-        <Image style={styles.profileImage} source={require("../../assets/myIMGs/depo.jpg")} />
+        <Image style={styles.profileImage} source={{uri: item?.ownerInfo.profilePicture}} />
         <Text style={styles.ownerText}>
           {ownerInfo.firstName} {ownerInfo.lastName}
         </Text>
@@ -35,14 +35,22 @@ const Card = ({ image, style, item }) => {
       <View style={styles.tagContainer}>
         <Image style={styles.tagIcon} source={require("../../assets/myIMGs/tagNmber.png")} />
         <Text style={styles.tagText}>{sp_Number}</Text>
-        <Text style={styles.priorityText}>Priority Status</Text>
-        <Image style={styles.priorityIcon} source={require("../../assets/myIMGs/priority_high.png")} />
+        
+
+        { !priorityStatus.length &&
+          <>
+
+          <Text style={styles.priorityText}>Priority Status</Text>
+          <Image style={styles.priorityIcon} source={require("../../assets/myIMGs/priority_high.png")} />
+          
+          </> 
+        }
       </View>
 
       {/* Expandable Comment Section */}
       {expand ? (
         <View style={styles.commentExpanded}>
-          <Text style={styles.commentText}>{lost_comment}</Text>
+          <Text style={styles.commentText} numberOfLines={8} >{lost_comment}</Text>
         </View>
       ) : (
         <Pressable onPress={() => setExpand(true)} style={styles.commentCollapsed}>
@@ -121,6 +129,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#e0f7fa",
     borderRadius: 5,
+    height: "auto"
   },
   commentText: {
     fontSize: 14,

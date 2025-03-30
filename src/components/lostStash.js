@@ -13,7 +13,7 @@ const LostStash = (props) => {
   const [image, setImage] = useState("");
   const [showPicture, setShowPicture] = useState(false);
 
-  const { pictures, item } = props;
+  const { item } = props;
 
   const showFullImage = (value) => {
     setImage(value);
@@ -22,10 +22,10 @@ const LostStash = (props) => {
 
   return (
     <View style={styles.container}>
-      <Card item={item} style={styles} image={image} />
+      <Card item={item} style={styles} />
       <FlatList
         style={styles.imageWrapper}
-        data={pictures}
+        data={item.pictures}
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => `item-${index}-${item.assetId || 'fallback'}`}

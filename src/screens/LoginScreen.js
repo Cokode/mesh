@@ -4,13 +4,15 @@ import KeyboardAvoiding from "../components/keyBoardAvoidingView";
 import LoginField from "../components/loginField";
 import Spacer from "../components/spacer";
 import { useNavigation } from "@react-navigation/native";
-import { ApiUrl, api, storeToken } from "../urls/Api";
+import { ApiUrl, api, storeToken, removeToken} from "../urls/Api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
 
   const loginRequest = async (loginData) => {
+    removeToken();
+    console.log("Trying to login");
     try {
       const response = await api.post(ApiUrl.login, loginData, {
         headers: {
@@ -19,6 +21,7 @@ const LoginScreen = () => {
         withCredentials: true,
       });
     
+      console.log("Response: ", response);
       if (response.status) {
 
         const token = response.data.token;

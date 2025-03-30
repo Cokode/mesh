@@ -44,7 +44,7 @@ const HomeScreen = () => {
       });
 
       if (response.status && response.data) {
-        console.log(response.data[0]?.itemDesc);
+        console.log(response.data[1]?.lost_comment);
 
         setDATA(response.data); // Update the state
       } else {
@@ -57,12 +57,6 @@ const HomeScreen = () => {
 
   const renderItems = ({ item }) => (
     <LostStash
-      itemName={item.itemName}
-      stashName={item.dateAdded}
-      desc={item.itemDesc}
-      SerialNum={item.sp_Number}
-      lost_comment={item.lost_comment}
-      pictures={item.pictures}
       item={item}
     />
   );
