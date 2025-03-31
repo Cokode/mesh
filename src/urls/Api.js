@@ -12,7 +12,8 @@ const ApiUrl = {
   loadReport: "loadReport",
   getReport: "getReport",
   getUser: "getUser",
-  updatePic: "update_pro"
+  updatePic: "update_pro",
+  updateBoard: "updateBoard"
 };
 
 const api = axios.create({

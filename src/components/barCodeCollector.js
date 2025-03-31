@@ -37,7 +37,7 @@ export default function wrapper ({ onpress }) {
         <Pressable
           style={styles.btnHighlight}
         >
-          <Text disabled={ inputValue.length <= 9 } style={ styles.btnTxt } onPress={ onSubmit }>
+          <Text disabled={ inputValue.length <= 5 } style={ styles.btnTxt } onPress={ onSubmit }>
             Submit
           </Text>
         </Pressable>

@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ProfileEdit from "../components/profileEdit";
 import ImageModal from "../views/imageModal";
 import selectImage from "../components/lib/imagePicker";
+import FoundItemsList from "../components/foundComp";
 
 const BoardScreen = () => {
   const [user, setUser] = useState(null);
@@ -139,6 +140,14 @@ const BoardScreen = () => {
     console.log("Fetching User Information.");
   }, []);
 
+  const demoItems = [
+    { id: '1', founder: 'Alice', founderNumber: '+1234567890', itemName: 'Wallet' },
+    { id: '2', founder: 'Bob', founderNumber: '+0987654321', itemName: 'Phone' },
+    { id: '3', founder: 'Charlie', founderNumber: '+1122334455', itemName: 'Watch' },
+    { id: '4', founder: 'Diana', founderNumber: '+5566778899', itemName: 'Bag' },
+  ];
+  
+
   return (
     <GestureHandlerRootView>
       <ScrollView
@@ -169,6 +178,10 @@ const BoardScreen = () => {
         <TouchableOpacity style={styles.button} onPress={() => setShowModal(true)}>
           <Text style={styles.buttonText}>Update Profile</Text>
         </TouchableOpacity>
+
+        {
+          <FoundItemsList items={demoItems} onEndCase={(id) => alert(`End Case for item with id: ${id}`)} />
+        }
 
         <Modal
           visible={showModal} 

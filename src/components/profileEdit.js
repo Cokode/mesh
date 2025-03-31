@@ -98,7 +98,7 @@ const ProfileEdit = ({ style, onClose, user, onSubmit }) => {
             />
           </FormField>
 
-          <FormField label="Email" error={errors.email}>
+          <FormField label="Email*" error={errors.email}>
             <TextInput 
               value={formData.email} 
               style={styles.inputStyle} 
@@ -107,7 +107,7 @@ const ProfileEdit = ({ style, onClose, user, onSubmit }) => {
             />
           </FormField>
 
-          <FormField label="Password" error={errors.password}>
+          <FormField label="Password*" error={errors.password}>
             <TextInput 
               value={formData.password} 
               style={styles.inputStyle} 
