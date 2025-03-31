@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, KeyboardAvoidingView, TouchableOpacity, ScrollView } from "react-native";
 
-const ProfileEdit = ({ style, onClose, user }) => {
+const ProfileEdit = ({ style, onClose, user, onSubmit }) => {
   const { container } = style;
 
   const [formData, setFormData] = useState({
@@ -9,8 +9,8 @@ const ProfileEdit = ({ style, onClose, user }) => {
     lastName: user.lastName,
     email: user.email,
     password: "",
-    userName: user.username,
-    addr: user.address,
+    username: user.username,
+    address: user.address,
   });
 
   const [errors, setErrors] = useState({
@@ -18,8 +18,8 @@ const ProfileEdit = ({ style, onClose, user }) => {
     lastName: '',
     email: '',
     password: '',
-    userName: '',
-    addr: '',
+    username: '',
+    address: '',
   });
 
   const validateInput = (field, value) => {
@@ -33,8 +33,8 @@ const ProfileEdit = ({ style, onClose, user }) => {
         break;
       case 'firstName':
       case 'lastName':
-      case 'userName':
-        if (value.length <= 3) {
+      case 'username':
+        if (value?.length <= 3) {
           error = `${field} must be at least 4 characters`;
         }
         else if (/[^a-zA-Z0-9\s]/.test(value)) {
@@ -44,9 +44,9 @@ const ProfileEdit = ({ style, onClose, user }) => {
       case 'password':
         // No specific rules here, you can add them
         break;
-      case 'addr':
-        if (value.length <= 10) {
-          error = 'Address must be at least 4 characters';
+      case 'address':
+        if (value?.length <= 10) {
+          error = 'address must be at least 4 characters';
         }
         break;
       default:
@@ -71,7 +71,7 @@ const ProfileEdit = ({ style, onClose, user }) => {
       return;
     } else {
       // Handle valid form submission (e.g., send data to API)
-      alert('Profile updated successfully!');
+      onSubmit(formData);
       onClose();  // Optionally close the modal or navigate away
     }
   };
@@ -116,19 +116,19 @@ const ProfileEdit = ({ style, onClose, user }) => {
             />
           </FormField>
 
-          <FormField label="Username" error={errors.userName}>
+          <FormField label="Username" error={errors.username}>
             <TextInput 
-              value={formData.userName} 
+              value={formData.username} 
               style={styles.inputStyle} 
-              onChangeText={(e) => handleChange('userName', e)} 
+              onChangeText={(e) => handleChange('username', e)} 
             />
           </FormField>
 
-          <FormField label="Address" error={errors.addr}>
+          <FormField label="address" error={errors.address}>
             <TextInput 
-              value={formData.addr} 
-              style={styles.inputStyleAddr} 
-              onChangeText={(e) => handleChange('addr', e)} 
+              value={formData.address} 
+              style={styles.inputStyleaddress} 
+              onChangeText={(e) => handleChange('address', e)} 
               multiline
             />
           </FormField>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,  // Added bottom margin for spacing
   },
-  inputStyleAddr: {
+  inputStyleaddress: {
     height: 100,
     maxHeight: 100,
     paddingHorizontal: 10,

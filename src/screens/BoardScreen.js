@@ -80,6 +80,7 @@ const BoardScreen = () => {
         });
 
         if (data.data) {
+          console.log(data.data);
           setUser(data.data);
         } else {
           console.log("No data found");
@@ -93,6 +94,45 @@ const BoardScreen = () => {
 
     }, 400);
   };
+
+  const updateProfile = async ( body ) => {
+    if (!body) return;
+
+    const token = await fetchProtectedData();
+
+    if (!token) {
+      console.log("No token, cannot make this request");
+      return;
+    }
+    
+    try {
+
+      const res = await api.put(ApiUrl.updateProfile, body, 
+        {
+          headers : {
+            "Content-Type": "Application/json",
+            "Authorization": token
+          },
+
+          withCredentials: true,
+      });
+
+      console.log("Response:  ", res);
+      if (!res.status) {
+        alert('Not possible this time, Try again');
+        console.log("Invalid request.");
+        return;
+      }
+
+      getUserInfo();
+      alert('Profile updated successfully!');
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // 
+    }
+  }
 
   useEffect(() => { 
     getUserInfo();
@@ -134,7 +174,7 @@ const BoardScreen = () => {
           visible={showModal} 
           animationType="slide">
             <SafeAreaView style={styles.container}>
-            <ProfileEdit style={styles} onClose={() => setShowModal(false)} user={user?.body.user}/>
+            <ProfileEdit style={styles} onClose={() => setShowModal(false)} user={user?.body.user} onSubmit={updateProfile}/>
             </SafeAreaView>
         </Modal>
 
