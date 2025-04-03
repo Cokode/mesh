@@ -42,3 +42,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 context
+push.text

@@ -12,6 +12,9 @@ const BoardScreen = () => {
   const [refreshing, setRefreshing] = useState(false); // State for refresh control
   const [showModal, setShowModal] = useState(false);
   const [showPic, setShowPic] = useState(false);
+  const [boardData, setBoardData] = useState(null);
+  const [showList, setShowList] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const demoUser = {
     fullName: "John Doe",
@@ -68,11 +71,12 @@ const BoardScreen = () => {
     }
 
     setRefreshing(true); // Start refreshing AFTER 400ms delay
+    GetFoundStash();
 
     setTimeout(async () => {
 
       try {
-        const data = await api.get(ApiUrl.getUser, {
+        const response = await api.get(ApiUrl.getUser, {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
             Authorization: token,
@@ -80,9 +84,9 @@ const BoardScreen = () => {
           withCredentials: true,
         });
 
-        if (data.data) {
-          console.log(data.data);
-          setUser(data.data);
+        if (response.data) {
+          console.log(response.data);
+          setUser(response.data);
         } else {
           console.log("No data found");
         }
@@ -95,6 +99,35 @@ const BoardScreen = () => {
 
     }, 400);
   };
+
+  const GetFoundStash = async () => {
+    const token = await fetchProtectedData();
+
+    if (!token) return;
+
+    try {
+
+      const response = await api.get(ApiUrl.getBoardData, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token
+        },
+
+        withCredentials: true
+      });
+
+      if (!response.status) {
+        console.log("There is a problem fulfilling this requests");
+        return;
+      }
+
+      console.log(response.data);
+     setBoardData(response.data.data);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const updateProfile = async ( body ) => {
     if (!body) return;
@@ -137,17 +170,46 @@ const BoardScreen = () => {
 
   useEffect(() => { 
     getUserInfo();
-    console.log("Fetching User Information.");
+    console.log("Fetching User and Baord Information.");
   }, []);
 
-  const demoItems = [
-    { id: '1', founder: 'Alice', founderNumber: '+1234567890', itemName: 'Wallet' },
-    { id: '2', founder: 'Bob', founderNumber: '+0987654321', itemName: 'Phone' },
-    { id: '3', founder: 'Charlie', founderNumber: '+1122334455', itemName: 'Watch' },
-    { id: '4', founder: 'Diana', founderNumber: '+5566778899', itemName: 'Bag' },
-  ];
+  const HandSubmit = async (finderID, itemID) => {
+    console.log("HandSubmit called with:", finderID, itemID);
   
-
+    const token = await fetchProtectedData(); 
+    console.log("Token:", token);
+  
+   
+    if (!token || !finderID || !itemID) {
+      console.error("Missing required values: Token, finderID, or itemID");
+      return;
+    }
+  
+    try {
+      const res = await api.post(
+        ApiUrl.conclude,
+        { finderID, itemID },
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8", 
+            "Authorization": token,
+          },
+          withCredentials: true,
+        }
+      );
+  
+      if (!res.status) {
+        alert("We can't do this now, try again.");
+        return;
+      }
+  
+      alert("Yah! We are glad you got your stash back.");
+      GetFoundStash()
+    } catch (error) {
+      console.error("Error during API call:", error);
+    }
+  };
+  
   return (
     <GestureHandlerRootView>
       <ScrollView
@@ -156,43 +218,56 @@ const BoardScreen = () => {
       >
         {/* Profile Section */}
         <TouchableOpacity onPress={() => setShowPic(true)} style={styles.profileContainer}>
-          <Image source={{ uri: user?.body.profilePicture }} style={styles.profileImage} />
-          <Text style={styles.fullName}>{user?.body.user.firstName} {user?.body.user.lastName}</Text>
+          <Image source={{ uri: user?.itemOwner.profilePicture }} style={styles.profileImage} />
+          <View>
+            <Text style={styles.fullName}>{user?.itemOwner.firstName} {user?.itemOwner.lastName}</Text>
+              {/* Update Profile Button */}
+            <TouchableOpacity style={styles.button} onPress={() => setShowModal(true)}>
+              <Text style={styles.buttonText}>Update Profile</Text>
+            </TouchableOpacity>
+          </View>
+
         </TouchableOpacity>
 
         {/* Stats Section */}
         <View style={styles.statsContainer}>
-          <Text style={styles.statText}>Registered Stashes: {user?.body.reg_stash}</Text>
-          <Text style={styles.statText}>Found Stashes: {demoUser.stashesDiscovered}</Text>
-          <Text style={styles.statText}>Retrieved Stashes: {demoUser.stashesRetrieved}</Text>
-          <Text style={styles.statText}>Lost Stashes: {user?.body.lost_stash}</Text>
+          <Text style={styles.statText}>Registered Stashes: {boardData?.registeredStash}</Text>
+          <Text style={styles.statText}>Found Stashes: {boardData?.foundItems}</Text>
+          <Text style={styles.statText}>Lost Stashes: {boardData?.lostStash}</Text>
         </View>
 
         {/* Points Section */}
-        <View style={styles.pointsContainer}>
-          <Text style={styles.pointText}>Bonus Points: {demoUser.bonusPoints}</Text>
-          <Text style={styles.pointText}>Points Used: {demoUser.pointsUsed}</Text>
-        </View>
-
-        {/* Update Profile Button */}
-        <TouchableOpacity style={styles.button} onPress={() => setShowModal(true)}>
-          <Text style={styles.buttonText}>Update Profile</Text>
-        </TouchableOpacity>
+          <View style={[styles.pointsContainer, {backgroundColor: "#FFECA1"}]} >
+            <Text style={styles.pointText}>Bonus Points: { boardData?.rewardPoints }</Text>
+            <Text style={styles.pointText}>Points Used: { boardData?.pointsUsed }</Text>
+          </View>
 
         {
-          <FoundItemsList items={demoItems} onEndCase={(id) => alert(`End Case for item with id: ${id}`)} />
+          boardData?.foundItems > 0 ? (
+            <TouchableOpacity style={[styles.pointsContainer, {backgroundColor: "#5DE2E7"}]} onPress={() => setShowList(!showList)}>
+              <Text>You have discovered items</Text>
+            </TouchableOpacity>
+          ) : (
+              <View style={styles.pointsContainer}>
+                <Text>All your stash are safe</Text>
+              </View>
+          )
+        }
+
+        { showList && 
+          <FoundItemsList items={boardData?.discoveredItems} onEndCase={HandSubmit} />
         }
 
         <Modal
           visible={showModal} 
           animationType="slide">
             <SafeAreaView style={styles.container}>
-            <ProfileEdit style={styles} onClose={() => setShowModal(false)} user={user?.body.user} onSubmit={updateProfile}/>
+              <ProfileEdit style={styles} onClose={() => setShowModal(false)} user={user?.itemOwner} onSubmit={updateProfile}/>
             </SafeAreaView>
         </Modal>
 
         <ImageModal
-         image={{pictureUrls: user?.body.profilePicture}}  
+         image={{pictureUrls: user?.itemOwner.profilePicture}}  
          showPicture={showPic} 
          setShowPicture={() => setShowPic(false)} 
          uploadImg={() => updateImage()}
@@ -230,6 +305,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     elevation: 3,
+
+    elevation: 3, // Elevation for Android shadow
+    shadowColor: "#000", // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Offset: horizontal and vertical
+    shadowOpacity: 0.03, // Shadow transparency
+    shadowRadius: 3.5, // Blur radius for the shadow
   },
   statText: {
     fontSize: 16,
@@ -240,21 +321,26 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
-    elevation: 3,
+
+    elevation: 3, // Elevation for Android shadow
+    shadowColor: "#000", // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Offset: horizontal and vertical
+    shadowOpacity: 0.1, // Shadow transparency
+    shadowRadius: 2.5, // Blur radius for the shadow
   },
   pointText: {
     fontSize: 16,
     color: "#007AFF",
   },
   button: {
-    backgroundColor: "#007AFF",
-    padding: 12,
+    backgroundColor: "#E8E8E8",
+    padding: 10,
     borderRadius: 10,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#000",
+    fontSize: 12,
     fontWeight: "bold",
   },
 });

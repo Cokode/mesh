@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Pressable, Dimensions } from "react-native";
 import ImageModal from "../views/imageModal";
 import Card from "./userCard";
+import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
 
 const { width } = Dimensions.get("window");
 const IMAGE_WIDTH = width * 0.9; // 90% of screen width for better responsiveness
@@ -12,6 +13,7 @@ const LostStash = (props) => {
   const navigation = useNavigation();
   const [image, setImage] = useState("");
   const [showPicture, setShowPicture] = useState(false);
+  const [userID, setUserID] =  useState("");
 
   const { item } = props;
 
@@ -19,6 +21,53 @@ const LostStash = (props) => {
     setImage(value);
     setShowPicture(true);
   };
+
+  useEffect(() => { 
+    GetUserInfo();
+  }, []);
+
+  const GetUserInfo = async () =>  {
+    const token = await fetchProtectedData();
+
+    if (!token) {
+      console.log("Missing information in BoardScreen");
+      return;
+    }
+
+    setTimeout(async () => {
+
+      try {
+        const response = await api.get(ApiUrl.getUser, {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+        console.log(response.data);
+
+        if (response.data && response.status) {
+          const owner = response.data.itemOwner;
+
+          let myID = owner._id;
+          console.log(myID);
+          setUserID(myID);
+        } else {
+          console.log("No data found");
+        }
+
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setRefreshing(false); // Stop refreshing after API call
+      }
+
+    }, 400);
+  };
+  
+  const Check =  () => {
+    return userID === item?.ownerID;
+  }
 
   return (
     <View style={styles.container}>
@@ -39,7 +88,11 @@ const LostStash = (props) => {
       <View style={styles.buttonContainer}>
         <Pressable
           onPress={() => navigation.navigate('View', { stash: item })}
-          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [
+            styles.button, pressed && styles.buttonPressed,
+            userID === item.ownerID && styles.disabledButton
+          ]}
+          disabled={userID === item.ownerID}
         >
           <Image style={styles.infoIcon} source={require("../../assets/myIMGs/pan_tool.png")} />
           <Text style={styles.buttonText}>I Found it</Text>
@@ -52,7 +105,7 @@ const LostStash = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container: { 
     flex: 1,
     backgroundColor: "#f8f9fa",
     padding: 15,
@@ -81,6 +134,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 15,
   },
+  disabledButton: {
+    backgroundColor: '#ccc', // Gray out the button
+    opacity: 0.6,
+  },
+  disabledText: {
+    color: '#999', // Light text color for disabled state
+  },  
   button: {
     flexDirection: "row",
     alignItems: "center",

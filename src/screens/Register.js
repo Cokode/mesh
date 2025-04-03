@@ -1,24 +1,23 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import {StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Text } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Platform, SafeAreaView, Text } from "react-native";
 import Spacer from "../components/spacer.js";
 import InputText from "../components/signupField.js";
 import { ApiUrl, api } from "../urls/Api";
-
 
 const SignupScreen = () => {
   const navigator = useNavigation();
 
   const handleSubmit = async (formData) => {
     try {
+
+      console.log(formData)
       const response = await api.post(ApiUrl.register, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true, // Include this if credentials are involved
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
       });
 
-      console.log("Server Response: ", response);
+      console.log("Server Response: ", response.data);
     } catch (error) {
       console.error("Error submitting form:", error.response?.data || error.message);
     }
@@ -26,36 +25,41 @@ const SignupScreen = () => {
   
   return (
     <KeyboardAvoidingView
-      behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
-      style={ styles.mainContainer }>
-      <SafeAreaView 
-        style={ styles.container } >
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.mainContainer}
+    >
+      <SafeAreaView style={styles.container}>
         <Spacer>
-          <InputText handleSubmit={handleSubmit}/>
+          <InputText handleSubmit={handleSubmit} />
         </Spacer>
-        <Text onPress={()=> navigator.goBack()}>Login instead</Text>
+        <Text style={styles.loginText} onPress={() => navigator.goBack()}>
+          Already have an account? <Text style={styles.loginLink}>Login instead</Text>
+        </Text>
       </SafeAreaView>
     </KeyboardAvoidingView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#1B6B93',
+  },
   container: {
     flex: 1,
-    backgroundColor: 'green',
-    justifyContent:'center',
-    width: '100%',
-    alignContent:"center",
-    height: "100%"
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#1B6B93',
   },
-  mainContainer: {
-    flex: 1
+  loginText: {
+    textAlign: 'center',
+    color: '#fff',
+    marginTop: 20,
+    fontSize: 16,
   },
-  font: {
-    fontSize: 50,
-    fontWeight: 500,
-    alignSelf: "center",
-    paddingLeft: 20 // check to remove
+  loginLink: {
+    color: '#FFD700',
+    fontWeight: 'bold',
   }
 });
 

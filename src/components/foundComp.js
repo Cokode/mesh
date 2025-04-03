@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
 const FoundItemsList = ({ items, onEndCase }) => {
+  const [count, setCount] = useState(0);
+
+  const HandleSubmit = (finderID, itemID) => {
+    console.log(finderID, " ", itemID);
+    // Check whether the count is less than 1
+    if (count === 0) {
+      setCount(1); // Increment the count
+      alert("Please ensure you have received the item before ending the case.");
+      return;
+    }
+
+    // Reset the count and call the passed function
+    setCount(0);
+    onEndCase(finderID, itemID);
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
-      <Text style={styles.itemName}>📦 Stash: {item.itemName}</Text>
-      <Text style={styles.text}>👤 Founder: {item.founder}</Text>
-      <Text style={styles.text}>📱 Founder Number: {item.founderNumber}</Text>
-      <TouchableOpacity style={styles.endCaseButton} onPress={() => onEndCase(item.id)}>
-        <Text style={styles.buttonText}>End Case</Text>
+      <Text style={styles.itemName}>📦 Stash: {item.stashName}</Text>
+      <Text style={styles.text}>👤 Founder: {item.founderName}</Text>
+      <Text style={styles.text}>📱 Number: {item.contactInfo}</Text>
+      <TouchableOpacity
+        style={[styles.endCaseButton, count >= 1 && { backgroundColor: "#5DE2E7" }]}
+        onPress={() => {
+          //console.log(item.finderID, " ", item.itemID);
+          HandleSubmit(item.finderID, item.itemID)
+        
+        }}
+      >
+        <Text style={styles.buttonText}>
+          {count === 0 ? "End Case" : "Confirm"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -17,11 +42,12 @@ const FoundItemsList = ({ items, onEndCase }) => {
     <FlatList
       data={items}
       renderItem={renderItem}
-      keyExtractor={item => item.id}
+      keyExtractor={(item) => item.id || item.stashName} // Fallback keyExtractor
       contentContainerStyle={styles.list}
     />
   );
 };
+
 
 const styles = StyleSheet.create({
   list: {
@@ -35,12 +61,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   itemName: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 5,
   },
   endCaseButton: {

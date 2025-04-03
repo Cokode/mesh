@@ -15,35 +15,50 @@ const RegisterStashSrn = () => {
   const [show, setShow] = useState(false);
   const [showModal, setShowModal] = useState(show);
   const [formData, setFormData] = useState(null);
-  const [barcode, setBarcode] = useState(null);
+  const [barcode, setBarcode] = useState(null);;
 
-  const {uploadForm, errorMessage, loading, data} = useStashUpload(formData);
-
-  const handleSubmit = async (form) => { 
+  const handleSubmit = async (form) => {
     console.log("HandleSubmit called.");
-    if (!form) return;
-    setShow(!show);
-    setFormData(form);
-    
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
-  }
-  useEffect(() => {
-    if (!data) {
-      setShow(false);
+  
+    if (!form) {
+      console.warn("Form data is missing.");
       return;
     }
   
-    setShow(false);
+    setShow(true); // Show loader
+    console.log("Loader activated. show: ", show);
   
+    const result = await useStashUpload(form);
+    //console.log("Result from useStashUpload: ", result);
+  
+    if (!result) {
+      console.error("Upload failed. Result is null.");
+      setShow(false); // Hide loader
+      alert("This stash already exist");
+      return;
+    }
+  
+    setFormData(result); // Set form data
+    console.log("Form data updated with valid result.");
+  };
+  
+  useEffect(() => {
+    if (!formData) {
+      console.warn("Form data is missing. Closing loader.");
+      setShow(false); // Hide loader
+      return;
+    }
+  
+    setShow(false); // Hide loader after formData is available
     const timer = setTimeout(() => {
-      setShowModal(true);
+      setShowModal(true); // Show modal after timeout
     }, 400);
+
+    console.log(formData);
+    setBarcode(formData?.barCodeNum); // Safe access with fallback message
   
-    setBarcode(data?.barCodeNum ?? ""); // Ensure safe access to data
-  
-    return () => clearTimeout(timer); // Cleanup timeout to prevent memory leaks
-  }, [data]);
-  
+    return () => clearTimeout(timer); // Cleanup timeout
+  }, [formData]);  
 
   const bottomPadding = height => {
     setPadding(height);
