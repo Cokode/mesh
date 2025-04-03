@@ -16,10 +16,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { LogBox } from 'react-native';
 
 
-
-
+LogBox.ignoreLogs([
+  'VirtualizedLists should never be nested', // Example warning to ignore
+  'Warning: Each child in a list should have a unique "key" prop',
+  'Unhandled promise rejection'
+]);
+console.disableYellowBox = true;
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
