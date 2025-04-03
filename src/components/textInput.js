@@ -6,7 +6,7 @@ import Octicons from '@expo/vector-icons/Octicons';
 
 
 
-const InputSection = ({CloseCard, openModal, report}) => {
+const InputSection = ({CloseCard, openModal}) => {
 
   return (
     <>
@@ -22,10 +22,10 @@ const InputSection = ({CloseCard, openModal, report}) => {
           <Text> Comment </Text>
         </Pressable> 
 
-        <Pressable onPress={report} hitSlop={20} pressRetentionOffset={10} style={ ({ pressed }) => (pressed ? styles.highlight : styles.pressable)}>
+        {/* <Pressable onPress={report} hitSlop={20} pressRetentionOffset={10} style={ ({ pressed }) => (pressed ? styles.highlight : styles.pressable)}>
           <Image style={styles.imgeStyle} source={require("../../assets/myIMGs/add_photo_alternate_24dp_000000.png")} />
           <Text> Add image </Text>
-        </Pressable>
+        </Pressable> */}
       </View>
     </>
   )
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, 
     paddingVertical: 8, 
     marginBottom: 5, 
-    backgroundColor: "white", 
-    gap: 40,
+    backgroundColor: "#DDF3F4", 
+    gap: 140,
 
   }
 });

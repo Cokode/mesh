@@ -32,11 +32,17 @@ const useLoadReport = () => {
         }
       );
 
+      if (res.status) {
+        alert("Report submitted!");
+      } else {
+        alert("Not successful, try again!");
+      }
       console.log(res.data + " in the Hook");
       console.log(".........", res.status);
       setLoading(false);
       return res.data; // Return the response data if needed
     } catch (error) {
+      alert("Not successful, try again!");
       console.error("This request can't be made.", error);
       setErrorMessage(error.message || "Something went wrong.");
       setLoading(false);

@@ -25,8 +25,8 @@ import Animated, {
 
 const screenHeight = Dimensions.get("screen").height;
 
-const LostView = ({ item, handleReport }) => {
-  const { itemName, sp_Number, dateAdded, timeAdded, pictures, itemDesc } = item;
+const LostView = ({ item }) => {
+  const { itemName, sp_Number, dateAdded, timeAdded, barcodeNumber, pictures, itemDesc } = item;
 
   const [expandList, setExpandList] = useState(false);
   const [showPicture, setShowPicture] = useState(false);
@@ -142,16 +142,29 @@ const LostView = ({ item, handleReport }) => {
   return (
     <>
       {!expandList ? (
-        <Pressable onPress={ () => {  setExpandList(!expandList) } } style={ styles.outStyle }>
-          <View style={{ justifyContent: "center", flexDirection: "row", paddingHorizontal: 10, marginHorizontal: 5}}>
-            <Text style={{ fontSize: 12, color: "green", paddingRight: 20, fontWeight: 700}} >{itemName}</Text>
-            <Text style={{ fontSize: 12, color: "green", paddingRight: 20, fontWeight: 700}}>{sp_Number}</Text>
-          </View>
-
-          <View>
-            <Text>{ itemDesc }</Text>
-          </View> 
-        </Pressable>
+        <Pressable 
+        onPress={() => { setExpandList(!expandList) }} 
+        style={[styles.outStyle, styles.cardStyle]}
+      >
+        {/* Top Row: Item Name and Special Number */}
+        <View style={styles.topRow}>
+          <Text style={styles.itemName}>{itemName}</Text>
+          <Text style={styles.specialNumber}>{sp_Number}</Text>
+        </View>
+      
+        {/* Middle Row: Item Description */}
+        <View style={styles.middleRow}>
+          <Text style={styles.itemDesc}>{itemDesc}</Text>
+        </View>
+      
+        {/* Bottom Row: Additional Details */}
+        <View style={styles.bottomRow}>
+          <Text style={styles.detailText}>📅 Date Added: {dateAdded}</Text>
+          <Text style={styles.detailText}>🔢 Serial Number: {sp_Number}</Text>
+          <Text style={styles.detailText}>📌 Barcode: {barcodeNumber}</Text>
+        </View>
+      </Pressable>
+      
       ) : (
         <>
 
@@ -173,7 +186,7 @@ const LostView = ({ item, handleReport }) => {
             ListEmptyComponent={<Empty />}
             showsHorizontalScrollIndicator={false}
           />
-          <InputSection CloseCard={ () => setExpandList(!expandList) } openModal={showModal} report={handleReport}/>
+          <InputSection CloseCard={ () => setExpandList(!expandList) } openModal={showModal} />
 
           <Modal
             animationType="none"
@@ -314,6 +327,60 @@ const styles = StyleSheet.create({
   },
   ListGroup: {
     paddingHorizontal: 0.11
+  },
+
+
+  outStyle: {
+    marginVertical: 10,
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: '#f8f9fa',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  cardStyle: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  itemName: {
+    fontSize: 16,
+    color: '#1B6B93',
+    fontWeight: 'bold',
+    flexShrink: 1,
+  },
+  specialNumber: {
+    fontSize: 14,
+    color: '#198754',
+    fontWeight: '600',
+  },
+  middleRow: {
+    marginBottom: 10,
+  },
+  itemDesc: {
+    fontSize: 14,
+    color: '#6c757d',
+    fontStyle: 'italic',
+  },
+  bottomRow: {
+    marginTop: 10,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#e9ecef',
+  },
+  detailText: {
+    fontSize: 12,
+    color: '#495057',
+    marginBottom: 4,
   },
 });
 

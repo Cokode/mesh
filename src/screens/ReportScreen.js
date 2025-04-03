@@ -7,6 +7,8 @@ import useFetchStashes from "../hooks/useFetchData";
 import ReportChoice from "../components/reportChoice";
 import ReportComp from "../components/reportComp";
 import LostView from "../components/lostView";
+import Loading from "../components/loading";
+import NoStash from "../components/noStash";
 
 const ReportScreen = () => {
 
@@ -14,6 +16,7 @@ const ReportScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [reportDecision, setReportDecision] = useState(false);
   const { fetchStashes, errorMessage, stashes } = useFetchStashes();
+  const [noData, setNoData] = useState(false);
 
   const FullImage = (value) => {
     console.log(value.assetId)
@@ -31,14 +34,6 @@ const ReportScreen = () => {
     return reportDecision;
   };
 
-  const Empty = () => {
-    return (
-      <View>
-        <Text>Empty</Text>
-      </View>
-    );
-  };
-
     // Fectching stashes on every screen refresh.
   const onRefresh = () => {
     setRefreshing(true);
@@ -54,13 +49,18 @@ const ReportScreen = () => {
     fetchStashes();
   },[]);
   
-  const handleReport = ( ) => {
-    
-  }
+ useEffect(() => {
+ 
+     const timer = setTimeout(() => {
+       setNoData(stashes?.length === 0);
+     }, 4000);
+ 
+     return () => clearTimeout(timer); // Clean up timer when component unmounts
+   }, []);
 
   return (
     <KeyboardAvoiding>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1 , padding: 10, backgroundColor: "#fff"}}>
         <>
           <ReportChoice type={reportType} />
           <Spacer />
@@ -78,7 +78,7 @@ const ReportScreen = () => {
               <GestureHandlerRootView style={{ flex: 1 }}>
                 <FlatList 
                   data={ stashes }
-                  renderItem={({ item }) => <LostView item={item} report={handleReport}/>}
+                  renderItem={({ item }) => <LostView item={item} />}
                   keyExtractor={ item =>  item.uri }
                   ItemSeparatorComponent={() => (
                     <View 
@@ -89,7 +89,7 @@ const ReportScreen = () => {
                       }} 
                     />
                   )}
-                  ListEmptyComponent={<Empty />}
+                  ListEmptyComponent={noData && true? <NoStash /> : <Loading />}
                   refreshControl={ <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } /> }
                   showsVerticalScrollIndicator
                     />

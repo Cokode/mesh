@@ -5,6 +5,7 @@ import ModalView from '../components/modal';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CheerScreen from '../components/cheerScreen';
 import Spacer from '../components/spacer';
+import { api, ApiUrl, fetchProtectedData } from '../urls/Api';
 
 const StashView = ({ route }) => {
   const [showModal, setShowModal] = useState(false);
@@ -18,7 +19,40 @@ const StashView = ({ route }) => {
     match ? setValid(true) : setValid(false);
     console.log(data.barcodeNumber? data.barcodeNumber : "         ", "  ", value, "  ", match);
 
+    let obj = {id: data._id, num: 883477373, owner: data.ownerID, itemName: data.itemName}
+    
+    console.log(obj);
+
+
+    updateBoard(obj);
     setShowModal(true);
+  }
+
+
+  const updateBoard = async ( value) => {
+    const token = await fetchProtectedData();
+
+    if (!token) return;
+
+    try {
+      const response = await api.post(ApiUrl.updateBoard, value, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Authorization": token,
+        },
+        withCredentials: true,
+      });
+
+      if (!response.status) {
+        console.log("Cannot perform this operation.");
+        return;
+      }
+
+
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   return (
@@ -41,10 +75,6 @@ const StashView = ({ route }) => {
   );
 };
 
-  const handleSubmit = (value) => {
-    // code goes here.
-  }
-
 const ChildComponent = ({ closeModal, data, item }) => (
   <View style={{ width: "100%", height: "100%",  backgroundColor: "#f5f5f5", paddingTop: 50 }}>
     <Spacer />
@@ -54,7 +84,7 @@ const ChildComponent = ({ closeModal, data, item }) => (
     { data ? 
     
       (
-        <CheerScreen item={ item } styles={styles}  onClick={handleSubmit}/>
+        <CheerScreen item={ item } styles={styles} />
       ) : 
 
       <View style={styles.validStyle}>

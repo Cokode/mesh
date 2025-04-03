@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { Image, View, Modal, StyleSheet, Text } from "react-native";
+import { Image, View, Modal, StyleSheet, Text, TouchableOpacity } from "react-native";
+import Feather from '@expo/vector-icons/Feather';
 
 
-const ImageModal = ({ image, showPicture, setShowPicture }) => {
+const ImageModal = ({ image, showPicture, setShowPicture, uploadImg }) => {
   return (
     <Modal
       animationType="none"
@@ -22,6 +23,12 @@ const ImageModal = ({ image, showPicture, setShowPicture }) => {
         <Text style={styles.closeTextStyle} onPress={() => setShowPicture(false)}>
           X
         </Text>
+
+        {uploadImg && 
+          <TouchableOpacity style={styles.uploadTextStyle} onPress={() => setShowPicture(false)}>
+             <Feather name="share" size={33} color="white" onPress={uploadImg} />
+          </TouchableOpacity>
+        }
       </View>
     </Modal>
   );
@@ -34,11 +41,17 @@ const styles = StyleSheet.create({
     backgroundColor: "black", 
     justifyContent: "center"
   },
+  uploadTextStyle: {
+    fontSize: 30,
+    color:"white", 
+    position: "absolute",  
+    top: 120, right: 300
+  },
   closeTextStyle: {
     fontSize: 30,
    color:"white", 
    position: "absolute",  
-   top: 120, left: 30
+   top: 120, left: 300
   }
 })
 

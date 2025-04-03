@@ -10,15 +10,25 @@ const ApiUrl = {
   SRNcheck: "api/serialNumberCheck",
   getItems: "getItems",
   loadReport: "loadReport",
-  getReport: "getReport"
+  getReport: "getReport",
+  getUser: "getUser",
+  updatePic: "update_pro",
+  updateBoard: "updateBoard",
+  getBoardData: "boardData",
+  conclude: "conclude"
 };
 
 const api = axios.create({
   baseURL: "http://192.168.0.101:3000/", // Replace with your server's IP
 });
 
-console.log(ApiUrl['SRNcheck']);
-console.log(ApiUrl.registerItem);
+/*
+  use this to set the network address when needed.
+*/
+// export REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.158
+
+// console.log(ApiUrl['SRNcheck']);
+// console.log(ApiUrl.registerItem);
 
 const fetchProtectedData = async () => {
   const token = await getToken();
@@ -33,31 +43,37 @@ const fetchProtectedData = async () => {
 };
 
 const getToken = async () => {
+
   try {
     return await AsyncStorage.getItem("userToken");
   } catch (error) {
     console.error("Error retrieving token: ", error);
+
     return null;
   };
+
 };
 
 const storeToken = async (token) => {
+
   try {
     await AsyncStorage.setItem("userToken", token);
     console.log("Tokend successfully stored: ", token);
   } catch (error) {
     console.error("Error storing token: ", error);
   };
+
 };
 
 const removeToken = async () => {
+
   try {
-    await AsyncStorage.removeItem("userToken", token);
-    console.log("Tokend successfully removed: ", token);
+    await AsyncStorage.removeItem("userToken");
+    console.log("Tokend successfully removed: ");
   } catch (error) {
     console.error("Error removing token: ", error);
   };
-};
 
+};
 
 export {ApiUrl, api, fetchProtectedData, storeToken, removeToken};

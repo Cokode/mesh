@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Input, Button } from "@rneui/base";
+import { Input, Button } from "@rneui/themed";
 import { StyleSheet, View, Text } from "react-native";
 
-const InputText = ({handleSubmit}) => {
-
+const InputText = ({ handleSubmit }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -14,71 +13,79 @@ const InputText = ({handleSubmit}) => {
 
   const [errorM, setErrorM] = useState("");
 
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+    setErrorM("");
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style ={styles.textTittle}>
-          Sign up for an account
-        </Text>
+      <Text style={styles.textTitle}>Sign Up</Text>
+      
+      <View style={styles.formContainer}>
+        {["firstName", "lastName", "email", "password"].map((field, index) => (
+          <Input
+            key={index}
+            label={field === "password" ? "Password" : field.replace(/^\w/, c => c.toUpperCase())}
+            labelStyle={styles.labelStyle}
+            inputStyle={styles.inputStyle}
+            secureTextEntry={field === "password"}
+            keyboardType={field === "email" ? "email-address" : "default"}
+            value={formData[field]}
+            onChangeText={(text) => handleChange(field, text)}
+            errorMessage={errorM}
+          />
+        ))}
+        <Button 
+          title="Sign Up" 
+          onPress={() => handleSubmit(formData)} 
+          buttonStyle={styles.buttonStyle}
+          titleStyle={styles.buttonTitle}
+        />
       </View>
-      <Input
-        label="First Name"
-        value={formData.firstName}
-        onChangeText={(text) => setFormData({ ...formData, firstName: text })}
-        errorMessage={errorM}
-        onFocus={() => setErrorM("")}
-      />
-      <Input
-        label="Last Name"
-        value={formData.lastName}
-        onChangeText={(text) => setFormData({ ...formData, lastName: text })}
-        errorMessage={errorM}
-        onFocus={() => setErrorM("")}
-      />
-      <Input
-        label="Username"
-        value={formData.username}
-        onChangeText={(text) => setFormData({ ...formData, username: text })}
-        errorMessage={errorM}
-        onFocus={() => setErrorM("")}
-      />
-      <Input
-        label="Email"
-        keyboardType="email-address"
-        value={formData.email}
-        onChangeText={(text) => setFormData({ ...formData, email: text })}
-        errorMessage={errorM}
-        onFocus={() => setErrorM("")}
-      />
-      <Input
-        label="Password"
-        secureTextEntry={true}
-        value={formData.password}
-        onChangeText={(text) => setFormData({ ...formData, password: text })}
-        errorMessage={errorM}
-        onFocus={() => setErrorM("")}
-      />
-      <Button title="Submit" onPress={() => handleSubmit(formData)} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 15,
-    paddingHorizontal: 10,
+    marginVertical: 20,
   },
-  titleContainer: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    margin: 10,
-    padding: 5,
-    backgroundColor: 'orange'
+  textTitle: {
+    fontSize: 28,
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontWeight: 'bold',
   },
-  textTittle: {
-    fontSize: 35,
-    color: 'black',
-  }
+  formContainer: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  labelStyle: {
+    color: '#1B6B93',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  inputStyle: {
+    color: '#1B6B93',
+  },
+  buttonStyle: {
+    backgroundColor: '#1B6B93',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 20,
+  },
+  buttonTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default InputText;

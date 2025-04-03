@@ -15,6 +15,7 @@ import Animated, {
   withDecay,
   Easing
 } from 'react-native-reanimated';
+import NoStash from './noStash';
 
 let screenHeight = Dimensions.get("screen").height;
 
@@ -106,7 +107,7 @@ const StashList = () => {
         keyExtractor={item => item.uri}
         renderItem={({ item }) => <StashTemplate value={item} onpress={showModal} />}
         showsVerticalScrollIndicator={true}
-        ListEmptyComponent={<Text>No data available. Pull down to refresh.</Text>}
+        ListEmptyComponent={<NoStash />}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }

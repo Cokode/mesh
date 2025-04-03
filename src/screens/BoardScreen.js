@@ -1,48 +1,280 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Modal, SafeAreaView } from "react-native";
+import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ProfileEdit from "../components/profileEdit";
+import ImageModal from "../views/imageModal";
+import selectImage from "../components/lib/imagePicker";
+import FoundItemsList from "../components/foundComp";
 
 const BoardScreen = () => {
-  // Sample data (replace with actual data from API or state)
-  const user = {
+  const [user, setUser] = useState(null);
+  const [refreshing, setRefreshing] = useState(false); // State for refresh control
+  const [showModal, setShowModal] = useState(false);
+  const [showPic, setShowPic] = useState(false);
+  const [boardData, setBoardData] = useState(null);
+  const [showList, setShowList] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const demoUser = {
     fullName: "John Doe",
-    profilePicture: "https://via.placeholder.com/100", // Replace with actual image URL
+    profilePicture: "https://via.placeholder.com/100",
     stashesRegistered: 50,
     stashesDiscovered: 30,
     stashesRecovered: 20,
     stashesRetrieved: 15,
     bonusPoints: 200,
     pointsUsed: 120,
-    lostStashes: 23
+    lostStashes: 23,
   };
 
+  const updateImage = async () => {
+    const results = await selectImage(1);
+
+    // Extracting token from Asycronous Store
+      const token = await fetchProtectedData();
+
+      if (!token) {
+      console.log("Missing information in Board Screen.");
+      return;
+    }
+
+    try {
+
+      let imgData = results.assets[0].base64;
+
+      let response = await api.post(ApiUrl.updatePic, { "img": imgData }, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Authorization: token,
+        },
+        withCredentials: true,
+      });
+
+      if (response.data) {
+        getUserInfo();
+        alert("Profile picture updated.");
+      } else {
+       alert("An error occured, try again!");
+      }
+    } catch (error ) {
+      console.log(error);
+    }
+  }
+
+  const getUserInfo = async () =>  {
+    const token = await fetchProtectedData();
+
+    if (!token) {
+      console.log("Missing information in BoardScreen");
+      return;
+    }
+
+    setRefreshing(true); // Start refreshing AFTER 400ms delay
+    GetFoundStash();
+
+    setTimeout(async () => {
+
+      try {
+        const response = await api.get(ApiUrl.getUser, {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: token,
+          },
+          withCredentials: true,
+        });
+
+        if (response.data) {
+          console.log(response.data);
+          setUser(response.data);
+        } else {
+          console.log("No data found");
+        }
+
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setRefreshing(false); // Stop refreshing after API call
+      }
+
+    }, 400);
+  };
+
+  const GetFoundStash = async () => {
+    const token = await fetchProtectedData();
+
+    if (!token) return;
+
+    try {
+
+      const response = await api.get(ApiUrl.getBoardData, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token
+        },
+
+        withCredentials: true
+      });
+
+      if (!response.status) {
+        console.log("There is a problem fulfilling this requests");
+        return;
+      }
+
+      console.log(response.data);
+     setBoardData(response.data.data);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const updateProfile = async ( body ) => {
+    if (!body) return;
+
+    const token = await fetchProtectedData();
+
+    if (!token) {
+      console.log("No token, cannot make this request");
+      return;
+    }
+    
+    try {
+
+      const res = await api.put(ApiUrl.updateProfile, body, 
+        {
+          headers : {
+            "Content-Type": "Application/json",
+            "Authorization": token
+          },
+
+          withCredentials: true,
+      });
+
+      console.log("Response:  ", res);
+      if (!res.status) {
+        alert('Not possible this time, Try again');
+        console.log("Invalid request.");
+        return;
+      }
+
+      getUserInfo();
+      alert('Profile updated successfully!');
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // 
+    }
+  }
+
+  useEffect(() => { 
+    getUserInfo();
+    console.log("Fetching User and Baord Information.");
+  }, []);
+
+  const HandSubmit = async (finderID, itemID) => {
+    console.log("HandSubmit called with:", finderID, itemID);
+  
+    const token = await fetchProtectedData(); 
+    console.log("Token:", token);
+  
+   
+    if (!token || !finderID || !itemID) {
+      console.error("Missing required values: Token, finderID, or itemID");
+      return;
+    }
+  
+    try {
+      const res = await api.post(
+        ApiUrl.conclude,
+        { finderID, itemID },
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8", 
+            "Authorization": token,
+          },
+          withCredentials: true,
+        }
+      );
+  
+      if (!res.status) {
+        alert("We can't do this now, try again.");
+        return;
+      }
+  
+      alert("Yah! We are glad you got your stash back.");
+      GetFoundStash()
+    } catch (error) {
+      console.error("Error during API call:", error);
+    }
+  };
+  
   return (
-    <View style={styles.container}>
-      {/* Profile Section */}
-      <View style={styles.profileContainer}>
-        <Image source={{ uri: user.profilePicture }} style={styles.profileImage} />
-        <Text style={styles.fullName}>{user.fullName}</Text>
-      </View>
+    <GestureHandlerRootView>
+      <ScrollView
+        style={styles.container}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={getUserInfo} />}
+      >
+        {/* Profile Section */}
+        <TouchableOpacity onPress={() => setShowPic(true)} style={styles.profileContainer}>
+          <Image source={{ uri: user?.itemOwner.profilePicture }} style={styles.profileImage} />
+          <View>
+            <Text style={styles.fullName}>{user?.itemOwner.firstName} {user?.itemOwner.lastName}</Text>
+              {/* Update Profile Button */}
+            <TouchableOpacity style={styles.button} onPress={() => setShowModal(true)}>
+              <Text style={styles.buttonText}>Update Profile</Text>
+            </TouchableOpacity>
+          </View>
 
-      {/* Stats Section */}
-      <View style={styles.statsContainer}>
-        <Text style={styles.statText}>Registered Stashes: {user.stashesRegistered}</Text>
-        <Text style={styles.statText}>Discovered Stashes: {user.stashesDiscovered}</Text>
-        <Text style={styles.statText}>Retrieved Stashes: {user.stashesRetrieved}</Text>
-        <Text style={styles.statText}>Found Stashes: {user.stashesRecovered}</Text>
-        <Text style={styles.statText}>lost Stashes: {user.lostStashes}</Text>
-      </View>
+        </TouchableOpacity>
 
-      {/* Points Section */}
-      <View style={styles.pointsContainer}>
-        <Text style={styles.pointText}>Bonus Points: {user.bonusPoints}</Text>
-        <Text style={styles.pointText}>Points Used: {user.pointsUsed}</Text>
-      </View>
+        {/* Stats Section */}
+        <View style={styles.statsContainer}>
+          <Text style={styles.statText}>Registered Stashes: {boardData?.registeredStash}</Text>
+          <Text style={styles.statText}>Found Stashes: {boardData?.foundItems}</Text>
+          <Text style={styles.statText}>Lost Stashes: {boardData?.lostStash}</Text>
+        </View>
 
-      {/* Update Profile Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Points Section */}
+          <View style={[styles.pointsContainer, {backgroundColor: "#FFECA1"}]} >
+            <Text style={styles.pointText}>Bonus Points: { boardData?.rewardPoints }</Text>
+            <Text style={styles.pointText}>Points Used: { boardData?.pointsUsed }</Text>
+          </View>
+
+        {
+          boardData?.foundItems > 0 ? (
+            <TouchableOpacity style={[styles.pointsContainer, {backgroundColor: "#5DE2E7"}]} onPress={() => setShowList(!showList)}>
+              <Text>You have discovered items</Text>
+            </TouchableOpacity>
+          ) : (
+              <View style={styles.pointsContainer}>
+                <Text>All your stash are safe</Text>
+              </View>
+          )
+        }
+
+        { showList && 
+          <FoundItemsList items={boardData?.discoveredItems} onEndCase={HandSubmit} />
+        }
+
+        <Modal
+          visible={showModal} 
+          animationType="slide">
+            <SafeAreaView style={styles.container}>
+              <ProfileEdit style={styles} onClose={() => setShowModal(false)} user={user?.itemOwner} onSubmit={updateProfile}/>
+            </SafeAreaView>
+        </Modal>
+
+        <ImageModal
+         image={{pictureUrls: user?.itemOwner.profilePicture}}  
+         showPicture={showPic} 
+         setShowPicture={() => setShowPic(false)} 
+         uploadImg={() => updateImage()}
+        />
+      
+      </ScrollView>
+    </GestureHandlerRootView>
   );
 };
 
@@ -73,6 +305,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     elevation: 3,
+
+    elevation: 3, // Elevation for Android shadow
+    shadowColor: "#000", // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Offset: horizontal and vertical
+    shadowOpacity: 0.03, // Shadow transparency
+    shadowRadius: 3.5, // Blur radius for the shadow
   },
   statText: {
     fontSize: 16,
@@ -83,21 +321,26 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
-    elevation: 3,
+
+    elevation: 3, // Elevation for Android shadow
+    shadowColor: "#000", // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Offset: horizontal and vertical
+    shadowOpacity: 0.1, // Shadow transparency
+    shadowRadius: 2.5, // Blur radius for the shadow
   },
   pointText: {
     fontSize: 16,
     color: "#007AFF",
   },
   button: {
-    backgroundColor: "#007AFF",
-    padding: 12,
+    backgroundColor: "#E8E8E8",
+    padding: 10,
     borderRadius: 10,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#000",
+    fontSize: 12,
     fontWeight: "bold",
   },
 });

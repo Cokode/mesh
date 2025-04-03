@@ -5,12 +5,16 @@ import LostStash from "../components/lostStash";
 // transport from below
 import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
 import { RefreshControl, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Loading from "../components/loading";
+import Empty from "../components/empty";
+import NoStash from "../components/noStash";
 
 
 
 const HomeScreen = () => {
   const [DATA, setDATA] = useState([]); // Initialize as an empty array
   const [refreshing, setRefreshing] = useState(false);
+  const [noData, setNoData] = useState(false);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -44,9 +48,13 @@ const HomeScreen = () => {
       });
 
       if (response.status && response.data) {
-        console.log(response.data[0]?.itemDesc);
+        console.log(response.data[1]?.lost_comment);
+        // console.log(response.data[0]);
 
-        setDATA(response.data); // Update the state
+        setTimeout(() => {
+          setDATA(response.data); // Update the state
+        }, 4000);
+        
       } else {
         console.log("No data found.");
       }
@@ -57,21 +65,18 @@ const HomeScreen = () => {
 
   const renderItems = ({ item }) => (
     <LostStash
-      itemName={item.itemName}
-      stashName={item.dateAdded}
-      desc={item.itemDesc}
-      SerialNum={item.sp_Number}
-      lost_comment={item.lost_comment}
-      pictures={item.pictures}
       item={item}
     />
   );
 
-  const Empty = () => (
-    <View>
-      <Text>Loading... wait</Text>
-    </View>
-  );
+  useEffect(() => {
+
+    const timer = setTimeout(() => {
+      setNoData(DATA?.length == 0);
+    }, 4000);
+
+    return () => clearTimeout(timer); // Clean up timer when component unmounts
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,7 +97,7 @@ const HomeScreen = () => {
               }}
             />
           )}
-          ListEmptyComponent={<Empty />}
+          ListEmptyComponent={noData? <NoStash /> : <Loading /> }
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
