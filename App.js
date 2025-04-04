@@ -34,34 +34,34 @@ function StashScreens() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          // backgroundColor: '#25292e', // dark color
-          // backgroundColor: "#39d9d5",
           position: 'absolute',
         },
-        tabBarStyle: {
-          // backgroundColor: '#25292e'
-        },
-        headerTintColor: '#fff', // Optional: to set the color of the header text and icons
+        headerTintColor: 'black',
       }}
     >
       <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerShown: true,
-          // headerRight: () => <Button title="Info" />,
+          headerShown: true, 
+          headerBackVisible: false, 
         }}
       />
       <Stack.Screen
         name="View"
         component={Stashview}
         options={{
-          headerShown: true,
+          title: "Barcode verification",
+          headerShown: true,              
+          headerBackVisible: true,         
+          gestureEnabled: true,            
+          headerBackTitleVisible: true,  
         }}
       />
     </Stack.Navigator>
   );
 }
+
 
 function MainScreens() {
   return (
@@ -111,6 +111,7 @@ function MainScreens() {
             },
           headerShown: true,
           // tabBarBadge: 3
+          // headerBackTitleVisible: true
         }}
 
       />
@@ -156,7 +157,7 @@ function MainScreens() {
               return  (<Ionicons name={focused ? 'information-circle' : 'information-circle-outline' } size={size} color={color} />)
             },
           headerShown: true,
-          tabBarBadge: null
+          tabBarBadge: null,
         }}
       />
     </Tab.Navigator>
@@ -169,7 +170,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Signup Screen" component={SignupScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="MainScreens" component={MainScreens} options={{ headerShown: false }} />
+        <Stack.Screen name="MainScreens" component={MainScreens} options={{ headerShown: false,  }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
