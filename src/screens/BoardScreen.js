@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Modal, SafeAreaView } from "react-native";
-import { ApiUrl, api, fetchProtectedData } from "../urls/Api";
+import { ApiUrl, api, fetchProtectedData, removeToken } from "../urls/Api";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 import ProfileEdit from "../components/profileEdit";
 import ImageModal from "../views/imageModal";
 import selectImage from "../components/lib/imagePicker";
 import FoundItemsList from "../components/foundComp";
 
 const BoardScreen = () => {
+    const navigation = useNavigation();
+
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false); // State for refresh control
   const [showModal, setShowModal] = useState(false);
@@ -258,6 +261,24 @@ const BoardScreen = () => {
           <FoundItemsList items={boardData?.discoveredItems} onEndCase={HandSubmit} />
         }
 
+        {
+         boardData?.foundItems == 0 &&
+          <TouchableOpacity 
+            style={styles.logOutWrapper} 
+            onPress={ () => {
+               removeToken(); // Clear stored token
+
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'LoginScreen' }], // This replaces the navigation stack with only the LoginScreen
+                });
+            }}
+          >
+          <Text>Logout</Text>
+          </TouchableOpacity>
+
+        }
+
         <Modal
           visible={showModal} 
           animationType="slide">
@@ -343,6 +364,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
   },
+
+  logOutWrapper: {
+    backgroundColor: "#CECECE",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 50,
+
+    width: "80",
+    alignSelf: "center",
+    elevation: 3, 
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+  }
 });
 
 export default BoardScreen;
