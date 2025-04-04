@@ -35,8 +35,8 @@ function StashScreens() {
       screenOptions={{
         headerStyle: {
           // backgroundColor: '#25292e', // dark color
-          backgroundColor: "#39d9d5"
-          // position: 'absolute',
+          // backgroundColor: "#39d9d5",
+          position: 'absolute',
         },
         tabBarStyle: {
           // backgroundColor: '#25292e'
@@ -45,11 +45,11 @@ function StashScreens() {
       }}
     >
       <Stack.Screen
-        name="L & F "
+        name="Home"
         component={HomeScreen}
         options={{
           headerShown: true,
-          headerRight: () => <Button title="Info" />,
+          // headerRight: () => <Button title="Info" />,
         }}
       />
       <Stack.Screen
@@ -90,7 +90,7 @@ function MainScreens() {
               return  (<Ionicons name={focused ? 'home-sharp' :iconName } size={size} color={color} />)
             },
           headerShown: false,
-          tabBarBadge: 3,
+          // tabBarBadge: 3,
           tabBarStyle: {
             // backgroundColor: '#25292e' // remove or customize later 
           },
@@ -110,7 +110,7 @@ function MainScreens() {
               return  (<MaterialIcons name={focused ? 'report' :iconName } size={size} color={color} />)
             },
           headerShown: true,
-          tabBarBadge: 3
+          // tabBarBadge: 3
         }}
 
       />
@@ -142,7 +142,7 @@ function MainScreens() {
               return  (<Ionicons name={focused ? iconName : 'list-circle-outline' } size={size} color={color} />)
             },
           headerShown: true,
-          tabBarBadge: 1
+          // tabBarBadge: 1
         }}
       />
       <Tab.Screen

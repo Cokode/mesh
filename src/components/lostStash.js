@@ -90,9 +90,9 @@ const LostStash = (props) => {
           onPress={() => navigation.navigate('View', { stash: item })}
           style={({ pressed }) => [
             styles.button, pressed && styles.buttonPressed,
-            userID === item.ownerID && styles.disabledButton
+            userID === item.ownerID && styles.disabledButton ||  item.FoundStatus && styles.disabledButton
           ]}
-          disabled={userID === item.ownerID}
+          disabled={userID === item.ownerID || item.FoundStatus === true}
         >
           <Image style={styles.infoIcon} source={require("../../assets/myIMGs/pan_tool.png")} />
           <Text style={styles.buttonText}>I Found it</Text>

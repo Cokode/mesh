@@ -19,7 +19,7 @@ const ApiUrl = {
 };
 
 const api = axios.create({
-  baseURL: "http://192.168.0.101:3000/", // Replace with your server's IP
+  baseURL: "http://192.168.1.158:3000/", // Replace with your server's IP
 });
 
 /*
