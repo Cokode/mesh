@@ -48,12 +48,9 @@ const HomeScreen = () => {
       });
 
       if (response.status && response.data) {
-        console.log(response.data[1]?.lost_comment);
-        // console.log(response.data[0]);
-
         setTimeout(() => {
           setDATA(response.data); // Update the state
-        }, 4000);
+        }, 2500);
         
       } else {
         console.log("No data found.");
@@ -73,7 +70,7 @@ const HomeScreen = () => {
 
     const timer = setTimeout(() => {
       setNoData(DATA?.length == 0);
-    }, 4000);
+    }, 3000);
 
     return () => clearTimeout(timer); // Clean up timer when component unmounts
   }, []);

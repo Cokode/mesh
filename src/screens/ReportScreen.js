@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import Spacer from "../components/spacer"; 
 import KeyboardAvoiding from "../components/keyBoardAvoidingView";
 import { RefreshControl, GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,7 +15,7 @@ const ReportScreen = () => {
   const [padding, setPadding] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [reportDecision, setReportDecision] = useState(false);
-  const { fetchStashes, errorMessage, stashes } = useFetchStashes();
+  const { fetchStashes, loading, stashes } = useFetchStashes();
   const [noData, setNoData] = useState(false);
 
   const FullImage = (value) => {
@@ -29,40 +29,43 @@ const ReportScreen = () => {
   };
 
   const reportType = () => {
+    fetchStashes();
     setReportDecision(!reportDecision);
     console.log("choice is: " + reportDecision);
     return reportDecision;
   };
 
-    // Fectching stashes on every screen refresh.
   const onRefresh = () => {
     setRefreshing(true);
     fetchStashes();
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setRefreshing(false);
     }, 2000);
+
+    return () => clearTimeout(timer);
   };
 
-  // Fectching stashes on every load / mount.
   useEffect(() => {
     fetchStashes();
   },[]);
   
- useEffect(() => {
- 
-     const timer = setTimeout(() => {
-       setNoData(stashes?.length === 0);
-     }, 4000);
- 
-     return () => clearTimeout(timer); // Clean up timer when component unmounts
-   }, []);
+  useEffect(() => {
+    if (stashes?.length === 0 || stashes === null) {
+      setNoData(false);
+    }
+    const timer = setTimeout(() => {
+      setNoData(true);
+    }, 3000);
+
+  return () => clearTimeout(timer);
+  },[]);
 
   return (
     <KeyboardAvoiding>
       <GestureHandlerRootView style={{ flex: 1 , padding: 10, backgroundColor: "#fff"}}>
         <>
-          <ReportChoice type={reportType} />
+          <ReportChoice type={reportType}/>
           <Spacer />
           <View style={styles.divider}></View>
 
@@ -89,7 +92,7 @@ const ReportScreen = () => {
                       }} 
                     />
                   )}
-                  ListEmptyComponent={noData && true? <NoStash /> : <Loading />}
+                  ListEmptyComponent={ noData? <NoStash /> : <Loading />}
                   refreshControl={ <RefreshControl refreshing={ refreshing } onRefresh={ onRefresh } /> }
                   showsVerticalScrollIndicator
                     />

@@ -26,10 +26,13 @@ const LoginScreen = () => {
 
         const token = response.data.token;
         storeToken(token);
-
-        console.log(response.data);
-        // console.log(response.data.token);
-       navigation.navigate('MainScreens')
+        
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainScreens' }],
+        });
+        
+       //navigation.navigate('MainScreens')
       } else {
         console.log("can't log you in at this time.");
       }
