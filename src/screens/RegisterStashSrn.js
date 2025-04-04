@@ -54,7 +54,6 @@ const RegisterStashSrn = () => {
       setShowModal(true); // Show modal after timeout
     }, 400);
 
-    console.log(formData);
     setBarcode(formData?.barCodeNum); // Safe access with fallback message
   
     return () => clearTimeout(timer); // Cleanup timeout

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Modal, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Modal, Image, FlatList, TouchableOpacity } from 'react-native';
 import { GestureDetector, Gesture, RefreshControl } from 'react-native-gesture-handler';
 import StashTemplate from './stashTemplate';
 import Spacer from './spacer';
@@ -16,6 +16,7 @@ import Animated, {
   Easing
 } from 'react-native-reanimated';
 import NoStash from './noStash';
+import ItemDisplay from './stashDisplay';
 
 let screenHeight = Dimensions.get("screen").height;
 
@@ -23,7 +24,8 @@ const StashList = () => {
   const [show, setShow] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { fetchStashes, errorMessage, stashes } = useFetchStashes();
-  const [screenH, SetScreenH] = useState(screenHeight * 0.9)
+  const [screenH, SetScreenH] = useState(screenHeight * 0.9);
+  const [myData, setMyData] = useState(null);
 
   const offset = useSharedValue({ x: 0, y: 0 });
   const start = useSharedValue({ x: 0, y: 0 });
@@ -75,8 +77,6 @@ const StashList = () => {
   const handleFocus = () => {
     inputRef.current?.focus();
   };
-    
-
   
   const hideModal = () => {
     console.log("pressed Hide Modal.")
@@ -85,7 +85,9 @@ const StashList = () => {
    offset.value = withTiming({x: 0, y: 0})
   };
 
-  const showModal = () => {
+  const showModal = (value) => {
+    console.log(value);
+    setMyData(value);
     offset.value = { x: 0, y: 0 };
     setShow(!show);  
   };
@@ -100,12 +102,16 @@ const StashList = () => {
     }, 2000);
   };
 
+  const onPressDelete = () => {
+    hideModal();
+  }
+
   return (
     <>
       <FlatList
         data={stashes}
         keyExtractor={item => item.uri}
-        renderItem={({ item }) => <StashTemplate value={item} onpress={showModal} />}
+        renderItem={({ item }) => <StashTemplate value={item} onpress={()=> showModal(item)} />}
         showsVerticalScrollIndicator={true}
         ListEmptyComponent={<NoStash />}
         refreshControl={
@@ -115,20 +121,22 @@ const StashList = () => {
 
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={show}
         onRequestClose={() => setShow(!show)}
       >
+        
         <GestureDetector gesture={panGesture}>
+        <View style={styles.modalOverlay}>
           <View style={styles.gestureContainer}>
             <Animated.View style={animatedStyle}>
               <View style={styles.animatedView}>
                 <View style={styles.dragIndicator} />
-                <Spacer />
-                <Text onPress={hideModal} >Hello everyone here</Text>
-                <Image style={styles.image} source={require("../../assets/myIMGs/image2.png")} />
+                <TouchableOpacity onPress={hideModal} ><Text style={{fontSize: 20, padding: 10, color: "red", fontWeight: 800}}>X</Text></TouchableOpacity>
+                <ItemDisplay itemData={myData} onButtonPress={onPressDelete} />
               </View>
             </Animated.View>
+          </View>
           </View>
         </GestureDetector>
       </Modal>
@@ -141,13 +149,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.11)', // slight dim behind
+  },
   animatedView: {
     height: screenHeight * 0.95,
-    // backgroundColor: '#f9f9f9',
-    // backgroundColor: "orange",
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
-    padding: 20,
+    padding: 10,
     alignItems: 'center',
     shadowColor: "#000",
     shadowOffset: {
