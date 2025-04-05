@@ -80,7 +80,7 @@ const LostStash = (props) => {
         keyExtractor={(item, index) => `item-${index}-${item.assetId || 'fallback'}`}
         renderItem={({ item }) => (
           <Pressable onPress={() => showFullImage(item)}>
-            <Image style={styles.imageStyle} source={{ uri: item.pictureUrls }} />
+            <Image style={styles.imageStyle} source={{ uri: item?.pictureUrls }} />
           </Pressable>
         )}
       />
@@ -92,7 +92,7 @@ const LostStash = (props) => {
             styles.button, pressed && styles.buttonPressed,
             userID === item.ownerID && styles.disabledButton ||  item.FoundStatus && styles.disabledButton
           ]}
-          disabled={userID === item.ownerID || item.FoundStatus === true}
+          disabled={userID === item.ownerID || item.FoundStatus == true}
         >
           <Image style={styles.infoIcon} source={require("../../assets/myIMGs/pan_tool.png")} />
           <Text style={styles.buttonText}>I Found it</Text>

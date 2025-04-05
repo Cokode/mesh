@@ -66,12 +66,12 @@ const ItemDisplay = ({ itemData, onButtonPress }) => {
         <Text style={styles.sectionTitle}>Pictures</Text>
         {itemData?.pictures?.length > 0 ? (
           <FlatList
-            data={itemData.pictures}
+            data={itemData?.pictures}
             horizontal
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Image source={{ uri: item.pictureUrls }} style={styles.imageThumbnail} />
+                <Image source={{ uri: item?.pictureUrls }} style={styles.imageThumbnail} />
               </TouchableOpacity>
             )}
           />

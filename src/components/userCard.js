@@ -25,7 +25,7 @@ const Card = ({ style, item }) => {
     <Pressable style={styles.container} onPress={() => setExpand(!expand)}>
       {/* Profile Section */}
       <View style={styles.profileContainer}>
-        <Image style={styles.profileImage} source={{uri: item?.ownerInfo.profilePicture}} />
+        <Image style={styles.profileImage} source={{uri: item?.ownerInfo?.profilePicture}} />
         <Text style={styles.ownerText}>
           {ownerInfo.firstName} {ownerInfo.lastName}
         </Text>
