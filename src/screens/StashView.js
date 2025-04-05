@@ -13,13 +13,13 @@ const StashView = ({ route }) => {
 
   const data = route.params.stash;
 
-  const isValidBarcode = (value) => {
+  const isValidBarcode = (value, number) => {
     let match = data.barcodeNumber == value;
 
     match ? setValid(true) : setValid(false);
     console.log(data.barcodeNumber? data.barcodeNumber : "         ", "  ", value, "  ", match);
 
-    let obj = {id: data._id, num: 883477373, owner: data.ownerID, itemName: data.itemName}
+    let obj = {id: data._id, num: number? number: "N/A", owner: data.ownerID, itemName: data.itemName}
     
     console.log(obj);
 

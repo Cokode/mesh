@@ -42,7 +42,7 @@ const FoundItemsList = ({ items, onEndCase }) => {
     <FlatList
       data={items}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id || item.stashName} // Fallback keyExtractor
+      keyExtractor={(item) => item._id || item.stashName} // Fallback keyExtractor
       contentContainerStyle={styles.list}
     />
   );

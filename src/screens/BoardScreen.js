@@ -262,7 +262,7 @@ const BoardScreen = () => {
         }
 
         {
-         boardData?.foundItems == 0 &&
+         (!showList || boardData?.foundItems == 0) &&
           <TouchableOpacity 
             style={styles.logOutWrapper} 
             onPress={ () => {

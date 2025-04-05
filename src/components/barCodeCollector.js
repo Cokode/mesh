@@ -4,7 +4,9 @@ import Spacer from './spacer';
 
 export default function wrapper ({ onpress }) {
   const [inputValue, SetInputValue] = useState("");
+  const [number, setPhoneNumber] = useState("");
   const placeholder = "Enter barcode number ...";
+  const phonePlaceholder = "Enter phone number ...";
 
   const updateInput = (value) => {
     if (value.length < inputValue.length || inputValue.length < 10) {
@@ -15,10 +17,16 @@ export default function wrapper ({ onpress }) {
 
   //calls onpress to verify barcode match,
   const onSubmit = () => {
-    // SetInputValue(""); // set inpput value to default
-
-    console.log("Hello, Pressed.", inputValue);
-    onpress(inputValue);
+    console.log("Wrong input" , number);
+    const phoneRegex = /^[+]?[0-9]{10,14}$/; // Allows optional "+" and 10-14 digits
+    if (!phoneRegex.test(number)) {
+      console.log(inputValue,", ", number);
+      Alert.alert("Invalid phone format", "Please enter a valid phone number!"); // Alert on invalid number
+      return;
+    }
+    
+    console.log("Hello, Pressed.", inputValue, " , ", number);
+    onpress(inputValue, number);
   };
 
     return (
@@ -32,6 +40,13 @@ export default function wrapper ({ onpress }) {
           value={inputValue}
           onChangeText={(data) => (updateInput(data))}
           inputMode="numeric"
+        />
+         <TextInput 
+          style={styles.input}
+          placeholder= {phonePlaceholder}
+          value={number}
+          onChangeText={setPhoneNumber}
+          inputMode="tel"
         />
 
         <Pressable
