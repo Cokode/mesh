@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import NoStash from './noStash';
 import ItemDisplay from './stashDisplay';
+import { api, ApiUrl, fetchProtectedData } from '../urls/Api';
 
 let screenHeight = Dimensions.get("screen").height;
 
@@ -102,9 +103,34 @@ const StashList = () => {
     }, 2000);
   };
 
-  const onPressDelete = () => {
-    hideModal();
-  }
+  const onPressDelete = async (value) => {
+    const token = await fetchProtectedData();
+  
+    if (!token || !value) return;
+
+    console.log(value);
+   
+    try {
+      const res = await api.post(ApiUrl.deleteStash, {id : value}, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Authorization: token,
+        },
+        withCredentials: true,
+      });
+  
+      if (res.status === 200 || res.status === 204) {
+        alert("Your stash was successfully deleted.");
+        fetchStashes();
+      } else {
+        alert("We cannot delete this stash now.");
+      }
+    } catch (error) {
+      console.log("Delete stash error:", error);
+      alert("Something went wrong while deleting.");
+    }
+  };
+  
 
   return (
     <>

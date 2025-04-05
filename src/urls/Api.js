@@ -15,7 +15,8 @@ const ApiUrl = {
   updatePic: "update_pro",
   updateBoard: "updateBoard",
   getBoardData: "boardData",
-  conclude: "conclude"
+  conclude: "conclude",
+  deleteStash: "delete-stash"
 };
 
 const api = axios.create({

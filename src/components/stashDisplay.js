@@ -81,7 +81,7 @@ const ItemDisplay = ({ itemData, onButtonPress }) => {
       </View>
 
       {/* Action Button */}
-      <TouchableOpacity style={styles.button} onPress={() => onButtonPress(itemData)}>
+      <TouchableOpacity style={styles.button} onPress={() => onButtonPress(itemData?._id)}>
         <Icon name="edit-note" size={22} color="#fff" />
         <Text style={styles.buttonText}>Delete stash</Text>
       </TouchableOpacity>
