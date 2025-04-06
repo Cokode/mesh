@@ -1,6 +1,7 @@
 # Lost Item Reporting App (LIRA)
 > Thesis Documentation |
-[**Download My CV**](https://collinsawsbucketlist.s3.us-east-1.amazonaws.com/AWS_S3/CV+-+Collins+Amalimeh.pdf)
+[**Download My CV**](https://collinsawsbucketlist.s3.us-east-1.amazonaws.com/AWS_S3/CV+-+Collins+Amalimeh.pdf) <br/>
+> By - Collins Chinedu Amalimeh BSc Computer Science, University of Nyiregyhaza, Hungary
 
 ## Abstract
 The application aims to connect finders of lost items with their rightful owners in a seamless, efficient manner, leveraging item descriptions and unique barcode identifiers for quick and accurate matching. Owners of personal belongings are encouraged to attach unique printable barcodes to their items upon registration, simplifying identification and tracking if the items are reported lost. Once an item is found and reported by an app user, the owner is notified instantly, provided they are registered in the system. As a way to motivate participation, finders of lost items are rewarded with points that can later be redeemed as coupons in partnered stores.
@@ -46,14 +47,22 @@ w3schools.com
 |----------------|------------------------------------------------------------------------------------------------------------------------------------------|----------------------|
 | Create Account | I want to create an account using my email or phone number,<br/>so that I can access and personalize my experience within the application. |                  |
 | Login to my account           | As a registered user, I want to log into my account so that I can access my dashboard and use the app's features securely.                                  | User can enter valid credentials to access their account.<br/> Invalid credentials show an error.<br/> Option to stay logged in. |
-| Register an Item              | As a user, I want to register an item I own so that I can track or recover it if it gets lost.                                                              | User fills in item details.<br/> Unique identifier or serial number required.<br/> Item appears in user dashboard after save.   |
-| Report my lost item           | As a user, I want to report my item as lost so that others can help me find it or return it.                                                                | User can mark a registered item as lost.<br/> Lost item is flagged in the system.<br/> Notification sent to nearby users.       |
+| Register an Item              | As a user, I want to register an item I own so that I can easily report it as lost and recover it if it gets lost.                                                              | User fills in item details.<br/> Unique identifier or serial number required.<br/> Item appears in user dashboard after save.   |
+| Report my lost item           | As a user, I want to report my item as lost so that other users can contact me if they find it.                                                 | User can mark a registered item as lost.<br/> Lost item is flagged in the system.<br/> Notification sent to nearby users.       |
 | Report a found item           | As a user, I want to report an item I found so that the rightful owner can be notified.                                                                     | User fills in description and location.<br/> System checks for potential matches.<br/> Owner is notified if a match is found.  |
 | Delete a registered item      | As a user, I want to delete an item I previously registered so that I can remove items I no longer own.                                                    | User selects an item and confirms deletion.<br/> Deleted item no longer appears in dashboard.<br/> Deletion confirmation shown.|
 | Update my account/profile info| As a user, I want to update my profile information so that my account details remain current and accurate.                                                  | User can update name, contact, and photo.<br/> Changes are saved and reflected immediately.<br/> Input validation in place.     |
 | Reset my password             | As a user, I want to reset my password so that I can regain access if I forget it.                                                                          | User enters email or phone.<br/> Receives a reset link or OTP.<br/> Password is successfully changed after confirmation.       |
-| Log out                       | As a logged-in user, I want to log out of my account so that I can keep my information secure when I’m done using the app.                                  | Logout button is accessible from Dashboard screen.<br/> User session ends and redirected to login or landing page.<br/> Session data and token are cleared. |
-
+| Log out                       | As a logged-in user, I want to log out of my account so that I can keep my information secure when I’m done using the app.                                  | Logout button is accessible from Dashboard screen.<br/> User session ends and redirected to login screen.<br/> Session data and token are cleared. |
  
  ![alt text](image.png)
+
+ ## Some Vital Use Cases
+ ![Registering-Item](/assets/docsIMG/Register-Item.drawio.png)
+ ![Lost-Item-Reporting](/assets/docsIMG/Report-Lost-Item.drawio.png)
+![In-App-Found-Item-Reporting](/assets/docsIMG/In-App-Reporting.png)
+
+
+
+
 
