@@ -55,12 +55,12 @@ w3schools.com
 | Reset my password             | As a user, I want to reset my password so that I can regain access if I forget it.                                                                          | User enters email or phone.<br/> Receives a reset link or OTP.<br/> Password is successfully changed after confirmation.       |
 | Log out                       | As a logged-in user, I want to log out of my account so that I can keep my information secure when I’m done using the app.                                  | Logout button is accessible from Dashboard screen.<br/> User session ends and redirected to login screen.<br/> Session data and token are cleared. |
  
- ![alt text](image.png)
+ ![alt text](/assets/docsIMG/image.png)
 
  ## Some Vital Use Cases
+ ![In-App-Found-Item-Reporting](/assets/docsIMG/In-App-Reporting.png)
  ![Registering-Item](/assets/docsIMG/Register-Item.drawio.png)
  ![Lost-Item-Reporting](/assets/docsIMG/Report-Lost-Item.drawio.png)
-![In-App-Found-Item-Reporting](/assets/docsIMG/In-App-Reporting.png)
 
 ## Schema 
 ![In-App-Found-Item-Reporting](/assets/docsIMG/database_schema.drawio%20(1).png)
