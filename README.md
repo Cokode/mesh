@@ -62,6 +62,7 @@ w3schools.com
  ![Registering-Item](/assets/docsIMG/Register-Item.drawio.png)
  ![Lost-Item-Reporting](/assets/docsIMG/Report-Lost-Item.drawio.png)
 
-## Schema 
+## Schema Structure
 ![In-App-Found-Item-Reporting](/assets/docsIMG/database_schema.drawio%20(1).png)
 
+![In-App-Found-Item-Reporting](/assets/docsIMG/record.drawio.png)
