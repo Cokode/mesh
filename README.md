@@ -1,7 +1,7 @@
 # Lost Item Reporting App (LIRA)
 > Thesis Documentation |
 [**Download My CV**](https://collinsawsbucketlist.s3.us-east-1.amazonaws.com/AWS_S3/CV+-+Collins+Amalimeh.pdf) <br/>
-> By - Collins Chinedu Amalimeh BSc Computer Science, University of Nyiregyhaza, Hungary
+>Collins Chinedu Amalimeh<Br/> BSc Computer Science, University of Nyiregyhaza, Hungary
 
 ## Abstract
 The application aims to connect finders of lost items with their rightful owners in a seamless, efficient manner, leveraging item descriptions and unique barcode identifiers for quick and accurate matching. Owners of personal belongings are encouraged to attach unique printable barcodes to their items upon registration, simplifying identification and tracking if the items are reported lost. Once an item is found and reported by an app user, the owner is notified instantly, provided they are registered in the system. As a way to motivate participation, finders of lost items are rewarded with points that can later be redeemed as coupons in partnered stores.
@@ -62,7 +62,6 @@ w3schools.com
  ![Lost-Item-Reporting](/assets/docsIMG/Report-Lost-Item.drawio.png)
 ![In-App-Found-Item-Reporting](/assets/docsIMG/In-App-Reporting.png)
 
-
-
-
+## Schema 
+![In-App-Found-Item-Reporting](/assets/docsIMG/database_schema.drawio%20(1).png)
 
