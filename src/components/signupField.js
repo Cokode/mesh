@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
   formContainer: {
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     backgroundColor: '#1B6B93',
+    // backgroundColor: "#0C356A",
     borderRadius: 10,
     padding: 15,
     marginTop: 20,

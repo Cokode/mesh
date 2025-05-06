@@ -26,7 +26,7 @@ import Animated, {
 const screenHeight = Dimensions.get("screen").height;
 
 const LostView = ({ item }) => {
-  const { itemName, sp_Number, dateAdded, timeAdded, barcodeNumber, pictures, itemDesc } = item;
+  const { itemName, sp_Number, dateAdded, tagNumber, barcodeNumber, pictures, itemDesc } = item;
 
   const [expandList, setExpandList] = useState(false);
   const [showPicture, setShowPicture] = useState(false);
@@ -149,7 +149,7 @@ const LostView = ({ item }) => {
         {/* Top Row: Item Name and Special Number */}
         <View style={styles.topRow}>
           <Text style={styles.itemName}>{itemName}</Text>
-          <Text style={styles.specialNumber}>{sp_Number}</Text>
+          <Text style={styles.specialNumber}>{sp_Number || tagNumber}</Text>
         </View>
       
         {/* Middle Row: Item Description */}

@@ -18,7 +18,7 @@ const useStashUpload = async (form) => {
       },
     });
 
-    console.log(response, " This is response.");
+    //console.log(response, " This is response.");
     // Check Response Status
     if (response && response.status) {
       return response.data; // Return response data

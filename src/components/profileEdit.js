@@ -113,6 +113,8 @@ const ProfileEdit = ({ style, onClose, user, onSubmit }) => {
               style={styles.inputStyle} 
               onChangeText={(e) => handleChange('password', e)} 
               secureTextEntry 
+              placeholder="**********"
+              placeholderTextColor={"black"}
             />
           </FormField>
 
@@ -157,9 +159,10 @@ const FormField = ({ label, children, error }) => {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "#fff",
-    marginBottom: 15,  // Increased marginBottom
-    padding: 10,
-    borderRadius: 5,
+    marginBottom: 5,  // Increased marginBottom
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 7,
   },
   labelStyle: {
     fontSize: 16,
@@ -173,7 +176,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     fontSize: 16,
-    marginBottom: 10,  // Added bottom margin for spacing
+    // marginBottom: 0,  // Added bottom margin for spacing
   },
   inputStyleaddress: {
     height: 100,

@@ -55,7 +55,7 @@ const LoginScreen = () => {
             showHideTransition ='fade'
           />
           <Text 
-            style={{fontSize: 50, alignSelf: 'center', marginBottom: 50, color: 'orange' }}
+            style={{fontSize: 50, alignSelf: 'center', marginTop: 45, color: 'orange' }}
           >
             Lira
           </Text>
@@ -74,7 +74,7 @@ const LoginScreen = () => {
                 onPress={() => navigation.navigate('Signup Screen')}>
                  <Text style={ styles.smallFont}>Create new account</Text>
              </TouchableOpacity>
-          </View>
+            </View>
           </Spacer>
           </ScrollView>
       </SafeAreaView>
@@ -88,15 +88,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B6B93',
     justifyContent: 'center',
     width: '100%',
-    alignContent:"center",
+    alignContent:"flex-end",
     // height: "100%"
   },
   font: {
     fontSize: 25,
-    fontWeight: 500,
+    // fontWeight: 500,
     alignSelf: "center",
-    paddingLeft: 35, // check to remove
-    marginBottom: 0
+    marginTop: 150
   },
   forgotPassword: {
     justifyContent: 'center',

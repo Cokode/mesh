@@ -248,11 +248,11 @@ const BoardScreen = () => {
         {
           boardData?.foundItems > 0 ? (
             <TouchableOpacity style={[styles.pointsContainer, {backgroundColor: "#5DE2E7"}]} onPress={() => setShowList(!showList)}>
-              <Text>You have discovered items</Text>
+              <Text style={{fontWeight: 700}}>{`Look ${user?.itemOwner.firstName}! Someone found your stash!`}</Text>
             </TouchableOpacity>
           ) : (
               <View style={styles.pointsContainer}>
-                <Text>All your stash are safe</Text>
+                {boardData?.lostStash > 0 ? <Text style={{fontWeight: 900, color: "red"}}>{`You have a lost stash out there ${user?.itemOwner.firstName}`}</Text> : <Text style={{fontWeight: 900, color: "Blue"}}>All your stash are safe</Text> }
               </View>
           )
         }
@@ -274,7 +274,7 @@ const BoardScreen = () => {
                 });
             }}
           >
-          <Text>Logout</Text>
+          <Text style={{textAlign: "center", fontWeight: "500"}}>Logout</Text>
           </TouchableOpacity>
 
         }
@@ -366,10 +366,11 @@ const styles = StyleSheet.create({
   },
 
   logOutWrapper: {
-    backgroundColor: "#CECECE",
+    // backgroundColor: "#CECECE",
     padding: 10,
     borderRadius: 10,
     marginTop: 50,
+    borderWidth: 1,
 
     width: "80",
     alignSelf: "center",

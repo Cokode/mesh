@@ -43,7 +43,7 @@ const RegisterInput = ({ bottomPad, submitAction }) => {
       imageData.forEach(e => newImages.push(e));
     }
 
-    newImages.forEach(e => console.log(e.fileSize)); // To be removed
+   // newImages.forEach(e => console.log(e.fileSize)); // To be removed
 
     setImageData(newImages);
     console.log("ending line..........");

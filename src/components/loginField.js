@@ -25,39 +25,38 @@ const LoginField = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
       <Spacer>
-      <Input 
-        ref={inputElement}
-        style={styles.inputStyle}
-          label="Email"
-          inputMode="email"
-          value={login["email"]}
-          onChangeText={(e) => {
-            setErrMessage({...errMessage, default: errMessage['']});
-            setLogin({...login, email: e})
-          }}
-          labelStyle={styles.labelStyle}
-          keyboardAppearance="dark"
-          errorStyle={{color: 'orange', fontSize: 14}}
-      />
+        <Input 
+          ref={inputElement}
+          style={styles.inputStyle}
+            label="Email"
+            inputMode="email"
+            value={login["email"]}
+            onChangeText={(e) => {
+              setErrMessage({...errMessage, default: errMessage['']});
+              setLogin({...login, email: e})
+            }}
+            labelStyle={styles.labelStyle}
+            keyboardAppearance="dark"
+            errorStyle={{color: 'orange', fontSize: 14}}
+        />
       </Spacer>
       <Spacer>
-      <Input 
-        style={styles.inputStyle}
-          label="Password"
-          inputMode="text"
-          value={login["password"]}
-          secureTextEntry={true}
-          errorMessage= {errMessage.default}
-          onChangeText={(e) => {
-            setErrMessage({...errMessage, default: errMessage['']});
-            setLogin({...login, password: e})
-          }}
-          labelStyle={styles.labelStyle}
-          keyboardAppearance="dark"
-          errorStyle={{color: 'orange', fontSize: 14}}
-      />
+        <Input 
+          style={styles.inputStyle}
+            label="Password"
+            inputMode="text"
+            value={login["password"]}
+            secureTextEntry={true}
+            errorMessage= {errMessage.default}
+            onChangeText={(e) => {
+              setErrMessage({...errMessage, default: errMessage['']});
+              setLogin({...login, password: e})
+            }}
+            labelStyle={styles.labelStyle}
+            keyboardAppearance="dark"
+            errorStyle={{color: 'orange', fontSize: 14}}
+        />
        </Spacer>
-       <Spacer/>
        <Button
         title="Login"
         buttonStyle={styles.buttonStyle} // For the button itself
@@ -75,40 +74,37 @@ const LoginField = ({ onSubmit }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5,
-    // backgroundColor: 'orange',
     borderColor: '#1B6B93',
     borderWidth: 2,
     borderRadius: 10,
-    padding: 2
   },
   inputStyle: {
     fontSize: 18, 
     width: '80%',
-    padding: 5,
+    // padding: 5,
     borderRadius: 10
   },
   labelStyle: {
-    color: "black", // Change label color
-    fontSize: 18, // Change font size
-    fontWeight: "bold", // Make it bold
+    color: "black", 
+    fontSize: 18, 
+    fontWeight: "bold", 
   },
   buttonStyle: {
     backgroundColor: "#0C356A", //"#841584",
     borderRadius: 7,
     height: 60,
-    shadowColor: "#000", // Shadow color (black)
+    shadowColor: "#000",
     shadowOffset: {
-      width: 0,  // Horizontal shadow offset
-      height: 3, // Vertical shadow offset
+      width: 0,  
+      height: 3, 
     },
-    shadowOpacity: 0.3, // Shadow transparency (0 to 1)
-    shadowRadius: 4.65, // Blur radius for shadow
-    elevation: 8, // Android shadow (higher number = deeper shadow)
+    shadowOpacity: 0.3, 
+    shadowRadius: 4.65, 
+    elevation: 8, 
   },
   titleStyle: {
     fontSize: 20,
-    fontWeight: "600",
+    // fontWeight: "600",
     color: "#fff",
   },
 });

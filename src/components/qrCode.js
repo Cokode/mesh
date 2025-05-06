@@ -7,7 +7,7 @@ import ViewShot from 'react-native-view-shot';
 import Feather from '@expo/vector-icons/Feather';
 import captureAndSaveQRCode from './lib/viewShot';
 
-const QRCodeGenerator = ({ url, closeModal, barcode }) => {
+const QRCodeGenerator = ({ url, closeModal, barcode, picture }) => {
   const viewShotRef = useRef();
 
   return (
@@ -25,17 +25,18 @@ const QRCodeGenerator = ({ url, closeModal, barcode }) => {
 
       <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 0.9 }}>
         <View style={{padding: 20, backgroundColor: 'white', borderRadius: 15, marginBottom: 10, alignItems: 'center'}}>
-          <QRCode
+        <QRCode
             value={url}
             size={250}
             color="black"
             backgroundColor="white"
-            logo={require("../../assets/myIMGs/image.png")}
+            logo={picture ? { uri: picture } : require("../../assets/myIMGs/image.png")}
             logoMargin={3}
-            logoSize={30}
-            logoBackgroundColor='white'
-            logoBorderRadius={5}
-          />
+            logoSize={70}
+            logoBackgroundColor="white"
+            logoBorderRadius={20}
+        />
+
           <Text 
             style={{
                 fontSize: 12, 

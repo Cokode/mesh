@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from "react-native";
 
 const StashTemplate = ({ value, onpress }) => {
-  const { itemName, timeAdded, sp_Number, dateAdded, itemDesc, pictures } = value;
+  const { itemName, timeAdded, sp_Number, dateAdded, itemDesc, pictures, tagNumber } = value;
   const base64 = pictures.length > 0 ? pictures[0].base64 : '';
   const pictureUrl = pictures.length > 0 ? pictures[0].pictureUrls : '';
 
@@ -10,7 +10,7 @@ const StashTemplate = ({ value, onpress }) => {
     <TouchableOpacity style={styles.container} activeOpacity={0.8} onPress={onpress}>
       <View style={styles.descView}>
         <Text style={{ fontSize: 15, fontWeight: '600' }}>{itemName}</Text>
-        <Text>{sp_Number}</Text>
+        <Text style={{color: "#307a33", fontWeight: 600}}>{sp_Number || tagNumber }</Text>
         <Text>{dateAdded + ' ' + timeAdded}</Text>
         <Text style={{ color: 'grey' }}>{itemDesc}</Text>
       </View>

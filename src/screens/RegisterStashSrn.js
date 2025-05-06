@@ -8,6 +8,7 @@ import ImageLoading from "../views/imgLoading";
 import ValidSRN from "../components/validSRN";
 import useStashUpload from "../hooks/useStashUpload";
 import { AUTH_TOKEN } from "@env";
+import { api, ApiUrl, fetchProtectedData } from "../urls/Api";
 
 
 const RegisterStashSrn = () => {
@@ -16,6 +17,7 @@ const RegisterStashSrn = () => {
   const [showModal, setShowModal] = useState(show);
   const [formData, setFormData] = useState(null);
   const [barcode, setBarcode] = useState(null);;
+  const [img, setImg] = useState(null);
 
   const handleSubmit = async (form) => {
     console.log("HandleSubmit called.");
@@ -67,7 +69,38 @@ const RegisterStashSrn = () => {
     setShowModal(!showModal); 
   };
 
-  const dataToStore = "https://www.instagram.com/lordofnordic/"; // Replace with your data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await fetchProtectedData();
+  
+        if (!token) {
+          console.log("Missing information in RegisterStash: token not provided.");
+          return; 
+        }
+  
+        const userImage = await api.get(ApiUrl.getBoardData, {
+          headers: { 
+            "Content-Type": "application/json; charset=utf-8", 
+            "Authorization": token,
+          },
+        });
+  
+        if (userImage) {
+          console.log("\n\n");
+          console.log(userImage.data);
+          setImg(userImage.data.data.profilePicture);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [formData]);
+  
+
+  const iGUri = "https://www.instagram.com/lordofnordic/"; // Replace with your data
 
   return (
     <KeyboardAvoiding>
@@ -75,7 +108,7 @@ const RegisterStashSrn = () => {
       <ScrollView style={styles.scrollView} >
         <RegisterInput bottomPad = {bottomPadding} showModal={hideModal} submitAction={handleSubmit}/>
           <Modal animationType="slide" transparent={true} visible={showModal} >
-            <QRCodeGenerator url= {dataToStore} closeModal={hideModal} barcode={barcode}/>
+            <QRCodeGenerator url= {iGUri} closeModal={hideModal} barcode={barcode} picture={img? img : " "}/>
           </Modal>
 
           <Modal animationType="slide" transparent={false} visible={show} >
